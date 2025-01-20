@@ -5,9 +5,9 @@ export const defaultTextHandlers = [
     visualPriority: 5,
     mimMatchLength: 1,
     label: 'Vowels',
-    startCount: 66,
-    activeCount: 66,
-    persistentCount: 66,
+    startCount: 8,
+    activeCount: 8,
+    persistentCount: 8,
     alerted: false,
 
     process: (
@@ -39,9 +39,9 @@ export const defaultTextHandlers = [
     visualPriority: 5,
     mimMatchLength: 1,
     label: 'Constonants',
-    startCount: 98,
-    activeCount: 98,
-    persistentCount: 98,
+    startCount: 20,
+    activeCount: 20,
+    persistentCount: 20,
     alerted: false,
 
     process: (
@@ -72,9 +72,9 @@ export const defaultTextHandlers = [
     visualPriority: 5,
     mimMatchLength: 1,
     label: 'Space',
-    startCount: 30,
-    activeCount: 30,
-    persistentCount: 30,
+    startCount: 10,
+    activeCount: 10,
+    persistentCount: 10,
     alerted: false,
 
     process: (
@@ -105,9 +105,9 @@ export const defaultTextHandlers = [
     visualPriority: 5,
     mimMatchLength: 1,
     label: '?%&!',
-    startCount: 5,
-    activeCount: 5,
-    persistentCount: 5,
+    startCount: 3,
+    activeCount: 3,
+    persistentCount: 3,
     alerted: false,
 
     process: (
@@ -138,9 +138,9 @@ export const defaultTextHandlers = [
     visualPriority: 30,
     mimMatchLength: 1,
     label: 'a',
-    startCount: 5,
-    activeCount: 5,
-    persistentCount: 5,
+    startCount: 3,
+    activeCount: 3,
+    persistentCount: 3,
     alerted: false,
 
     process: (
@@ -166,11 +166,11 @@ export const defaultTextHandlers = [
     }
   },
   {
-    id: 'fuck',
+    id: 'hi',
     priority: 2,
     visualPriority: 20,
     mimMatchLength: 1,
-    label: 'fuck',
+    label: 'hi',
     startCount: 5,
     activeCount: 5,
     persistentCount: 5,
