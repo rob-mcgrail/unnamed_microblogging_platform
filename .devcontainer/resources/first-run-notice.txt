@@ -1,0 +1,5 @@
+👋 Welcome
+   - You are running Ubuntu and bash
+   - dcup to boot up your environment (docker compose up)
+   - dcrw [command] to run a command on the main web container
+   

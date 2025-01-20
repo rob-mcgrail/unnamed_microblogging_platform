@@ -1,0 +1,8 @@
+services:
+  web:
+    build: ./docker/
+    command: npm run dev -- --host
+    ports:
+      - "3000:5173"
+    volumes:
+      - .:/app
