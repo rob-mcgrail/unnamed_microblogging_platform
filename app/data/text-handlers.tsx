@@ -117,7 +117,7 @@ export const defaultTextHandlers = [
       let matchCount = 0;
     
       // Replace matched characters and count them
-      let modifiedText = text.replace(/[\?\%\&\*\_\-\"\'\(\)\\]/g, (match) => {
+      let modifiedText = text.replace(/[\?\%\&\*\_\-\"\'\(\)\\]/ig, (match) => {
         if (matchCount >= persistentCount) {
           return match;
         }
@@ -150,7 +150,7 @@ export const defaultTextHandlers = [
       let matchCount = 0;
     
       // Replace matched characters and count them
-      let modifiedText = text.replace(/[a]/g, (match) => {
+      let modifiedText = text.replace(/[a]/ig, (match) => {
         if (matchCount >= persistentCount) {
           return match;
         }
@@ -183,7 +183,7 @@ export const defaultTextHandlers = [
       let matchCount = 0;
     
       // Replace matched characters and count them
-      let modifiedText = text.replace(/hello/g, (match) => {
+      let modifiedText = text.replace(/hello/ig, (match) => {
         if (matchCount >= persistentCount) {
           return match;
         }
