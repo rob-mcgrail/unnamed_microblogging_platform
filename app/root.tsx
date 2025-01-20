@@ -10,7 +10,7 @@ import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 
 import { RichTextProvider } from '~/contexts/rich-text-context';
-
+import StatsPanel from '~/components/stats-panel';
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -43,10 +43,7 @@ export function Layout() {
         <RichTextProvider>
           <div className="flex h-screen">
             {/* Left Panel */}
-            <div className="w-1/2 bg-gray-800 text-white p-4">
-              <h1 className="text-xl font-bold">Left Panel</h1>
-              <p>This is the left panel content.</p>
-            </div>
+            <StatsPanel id={123} />
             <Outlet />
           </div>
           <ScrollRestoration />

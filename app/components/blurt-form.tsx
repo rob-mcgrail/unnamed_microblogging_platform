@@ -1,7 +1,7 @@
 import { 
   useFetcher 
 } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { useRichText } from "~/contexts/rich-text-context";
 
@@ -14,34 +14,39 @@ export interface BlurtFormProps {
 
 const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
-  const { content, setContent } = useRichText();
-
-  const formRef = useRef<HTMLFormElement>(null);
+  const { content, setContent, processContent, inputAlert, textHandlers, setTextHandlers } = useRichText();
 
   useEffect(() => {
     if (fetcher.state === "idle") {
-      formRef.current?.reset();
       setContent('');
+      setTextHandlers(textHandlers.map((handler) => {
+        handler.persistentCount = handler.activeCount;
+        return handler;
+      }));
     }
   }, [fetcher.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
-    setContent(e.target.value); // Update context content
+    processContent(e.target.value);
   };
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg mb-4">
-      <fetcher.Form  key={id} action="/timeline" method="post" className="flex flex-col">
+      <fetcher.Form key={id} action="/timeline" method="post" className="flex flex-col">
         <textarea
-          className="bg-gray-700 text-white rounded-lg p-3 mb-3 resize-none focus:outline-none"
+        className={`rounded-lg p-3 mb-3 resize-none focus:outline-none
+          transition-all duration-300 ${
+            inputAlert ? "bg-red-500" : "bg-gray-700"
+          } text-white`}
           placeholder="What's happening?"
           name="content"
           rows={3}
           value={content}
           onChange={handleChange}
         />
-        <p>{content.length}/{limit}</p>
+        <p className={`${content.length > limit ? "text-red-500" : "text-white"}`}>
+          {content.length}/{limit}
+        </p>
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 self-end"
