@@ -9,10 +9,6 @@ import type { LinksFunction } from "@remix-run/node";
 
 import "./tailwind.css";
 
-import Timeline from "~/components/timeline";
-import BlurtForm from "~/components/blurt-form";
-
-import { exampleBlurts } from "~/data/test-data";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,14 +43,7 @@ export function Layout() {
             <h1 className="text-xl font-bold">Left Panel</h1>
             <p>This is the left panel content.</p>
           </div>
-
-          {/* Right Panel */}
-          <div className="flex-1 bg-gray-900 p-4 flex flex-col">
-            <h1 className="text-xl font-bold mb-4">Right Panel</h1>
-
-            <BlurtForm />
-            <Timeline blurts={exampleBlurts} />
-          </div>
+          <Outlet />
         </div>
         <ScrollRestoration />
         <Scripts />

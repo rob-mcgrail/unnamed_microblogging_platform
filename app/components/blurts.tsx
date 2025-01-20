@@ -1,11 +1,11 @@
 import Blurt, { BlurtProps } from '~/components/blurt';
 
 
-interface TimelineProps {
+interface BlurtsProps {
   blurts: BlurtProps[] | [];
 }
 
-const Timeline: React.FC<TimelineProps> = ({ blurts }) => {
+const Blurts: React.FC<BlurtsProps> = ({ blurts }) => {
   return (
     <div className="flex-1 overflow-y-auto bg-gray-800 rounded-lg p-4">
       <ul className="space-y-4">
@@ -17,4 +17,4 @@ const Timeline: React.FC<TimelineProps> = ({ blurts }) => {
   );
 };
 
-export default Timeline;
+export default Blurts;
