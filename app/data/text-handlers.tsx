@@ -169,7 +169,7 @@ export const defaultTextHandlers = [
     id: 'hi',
     priority: 2,
     visualPriority: 20,
-    mimMatchLength: 1,
+    mimMatchLength: 2,
     label: 'hi',
     startCount: 5,
     activeCount: 5,
@@ -183,7 +183,7 @@ export const defaultTextHandlers = [
       let matchCount = 0;
     
       // Replace matched characters and count them
-      let modifiedText = text.replace(/fuck/g, (match) => {
+      let modifiedText = text.replace(/hi/g, (match) => {
         if (matchCount >= persistentCount) {
           return match;
         }
