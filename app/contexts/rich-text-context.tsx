@@ -50,7 +50,6 @@ export const RichTextProvider = ({ children }: { children: ReactNode }) => {
   const processContent = (text: string) => {
     textHandlers.sort((a, b) => a.priority - b.priority);
     let processedText = text;
-    setInputAlert(false);
 
     textHandlers.forEach((handler) => {
 
