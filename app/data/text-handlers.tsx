@@ -164,5 +164,38 @@ export const defaultTextHandlers = [
         matchCount,
       };
     }
+  },
+  {
+    id: 'fuck',
+    priority: 2,
+    visualPriority: 20,
+    mimMatchLength: 1,
+    label: 'fuck',
+    startCount: 5,
+    activeCount: 5,
+    persistentCount: 5,
+    alerted: false,
+
+    process: (
+      text: string,
+      persistentCount: number
+    ): { text: string; modifiedText: string; matchCount: number } => {
+      let matchCount = 0;
+    
+      // Replace matched characters and count them
+      let modifiedText = text.replace(/fuck/g, (match) => {
+        if (matchCount >= persistentCount) {
+          return match;
+        }
+        matchCount++;
+        return '';
+      });
+    
+      return {
+        text,
+        modifiedText,
+        matchCount,
+      };
+    }
   }
 ];
