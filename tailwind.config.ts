@@ -6,7 +6,7 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "Inter",
+          "Silkscreen",
           "ui-sans-serif",
           "system-ui",
           "sans-serif",
