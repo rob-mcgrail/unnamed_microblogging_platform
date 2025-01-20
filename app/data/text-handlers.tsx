@@ -2,6 +2,7 @@ export const defaultTextHandlers = [
   {
     id: 'vowels',
     priority: 5,
+    visualPriority: 5,
     mimMatchLength: 1,
     label: 'Vowels',
     startCount: 66,
@@ -35,6 +36,7 @@ export const defaultTextHandlers = [
   {
     id: 'constonants',
     priority: 5,
+    visualPriority: 5,
     mimMatchLength: 1,
     label: 'Constonants',
     startCount: 98,
@@ -67,6 +69,7 @@ export const defaultTextHandlers = [
   {
     id: 'whitespace',
     priority: 10,
+    visualPriority: 5,
     mimMatchLength: 1,
     label: 'Space',
     startCount: 30,
@@ -99,6 +102,7 @@ export const defaultTextHandlers = [
   {
     id: 'specials',
     priority: 5,
+    visualPriority: 5,
     mimMatchLength: 1,
     label: '?%&!',
     startCount: 5,
@@ -114,6 +118,39 @@ export const defaultTextHandlers = [
     
       // Replace matched characters and count them
       let modifiedText = text.replace(/[\?\%\&\*\_\-\"\'\(\)\\]/g, (match) => {
+        if (matchCount >= persistentCount) {
+          return match;
+        }
+        matchCount++;
+        return '';
+      });
+    
+      return {
+        text,
+        modifiedText,
+        matchCount,
+      };
+    }
+  },
+  {
+    id: 'a',
+    priority: 4,
+    visualPriority: 30,
+    mimMatchLength: 1,
+    label: 'a',
+    startCount: 5,
+    activeCount: 5,
+    persistentCount: 5,
+    alerted: false,
+
+    process: (
+      text: string,
+      persistentCount: number
+    ): { text: string; modifiedText: string; matchCount: number } => {
+      let matchCount = 0;
+    
+      // Replace matched characters and count them
+      let modifiedText = text.replace(/[a]/g, (match) => {
         if (matchCount >= persistentCount) {
           return match;
         }

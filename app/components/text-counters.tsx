@@ -4,7 +4,9 @@ import { useRichText } from "~/contexts/rich-text-context";
 
 const TextCounters = () => {
   const { textHandlers, textHandlerAlerts } = useRichText();
-  console.log(textHandlers);
+  textHandlers.sort((a, b) => a.priority - b.priority);
+  textHandlers.sort((a, b) => a.visualPriority - b.visualPriority);
+
   return (
     <div className="flex flex-col">
       {textHandlers.map((handler) => (

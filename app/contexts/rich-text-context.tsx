@@ -64,8 +64,19 @@ export const RichTextProvider = ({ children }: { children: ReactNode }) => {
         let significantEnding = text.slice(-handler.mimMatchLength);
         let alertTestResult = handler.process(significantEnding, 10);
         if (alertTestResult.matchCount > 0) {
-          setTextHandlerAlerts((prev) => [...prev, handler.id]);
-          setTimeout(() => setTextHandlerAlerts((prev) => prev.filter((id) => id !== handler.id)), 300);
+          const otherHandlersMatch = textHandlers.some((otherHandler) => {
+            // Exclude the current handler
+            if (otherHandler.id === handler.id) return false;
+    
+            // Check if the other handler matches and has activeCount > 0
+            const otherResult = otherHandler.process(significantEnding, 10);
+            return otherResult.matchCount > 0 && otherHandler.activeCount > 0;
+          });
+    
+          if (!otherHandlersMatch) {
+            setTextHandlerAlerts((prev) => [...prev, handler.id]);
+            setTimeout(() => setTextHandlerAlerts((prev) => prev.filter((id) => id !== handler.id)), 300);
+          }
         }
         handler.alerted = true;
       }
