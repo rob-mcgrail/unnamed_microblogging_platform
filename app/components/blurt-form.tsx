@@ -1,14 +1,34 @@
 import { 
   useFetcher 
 } from "@remix-run/react";
+import { useEffect, useRef } from "react";
+
+import { useRichText } from "~/contexts/rich-text-context";
 
 export interface BlurtFormProps {
   id: any;
   limit: number;
 }
 
+
+
 const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
+  const { content, setContent } = useRichText();
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (fetcher.state === "idle") {
+      formRef.current?.reset();
+      setContent('');
+    }
+  }, [fetcher.state]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(e.target.value);
+    setContent(e.target.value); // Update context content
+  };
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg mb-4">
@@ -18,8 +38,10 @@ const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
           placeholder="What's happening?"
           name="content"
           rows={3}
+          value={content}
+          onChange={handleChange}
         />
-        <p>0/{limit}</p>
+        <p>{content.length}/{limit}</p>
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 self-end"

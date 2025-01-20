@@ -7,6 +7,7 @@ import { json, redirect } from "@remix-run/node";
 
 import Blurts from "~/components/blurts";
 import BlurtForm from "~/components/blurt-form";
+import { useRichText } from "~/contexts/rich-text-context";
 
 import { exampleBlurts } from "~/data/test-data";
 
@@ -28,6 +29,5 @@ export const action = async ({
 }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  console.log(updates);
-  return redirect(`/`);
+  return redirect(`/timeline?1`);
 };
