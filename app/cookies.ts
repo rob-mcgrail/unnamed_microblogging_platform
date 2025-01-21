@@ -1,4 +1,4 @@
-import { createCookie } from "@vercel/remix";
+import { createCookie } from "@remix-run/node";
 
 export const sessionCookie = createCookie("you", {
   maxAge: 60 * 60 * 24 * 365,

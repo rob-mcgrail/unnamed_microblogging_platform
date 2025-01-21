@@ -1,4 +1,4 @@
-import { redirect } from "@vercel/remix";
+import { redirect } from "@remix-run/node";
 
 export async function loader() {
   return redirect("/timeline");

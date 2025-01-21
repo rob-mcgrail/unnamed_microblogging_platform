@@ -7,7 +7,7 @@ import {
   useLoaderData
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import { json } from "@vercel/remix";
+import { json } from "@remix-run/node";
 
 import { v4 as uuidv4 } from "uuid";
 
