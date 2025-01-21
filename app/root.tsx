@@ -7,6 +7,8 @@ import {
   useLoaderData
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import { json } from "@vercel/remix";
+
 import { v4 as uuidv4 } from "uuid";
 
 import "./tailwind.css";
@@ -45,7 +47,7 @@ export async function loader({ request }: { request: Request }) {
     userKey = await redis.get(`session:${sessionId}`);
     user = await redis.hgetall(`user:${userKey}`);
 
-    return Response.json({ found: true, user });
+    return json({ found: true, user });
   }
   else {
     // Create a new user
@@ -65,7 +67,7 @@ export async function loader({ request }: { request: Request }) {
 
     const headers = new Headers();
     headers.append("Set-Cookie", await sessionCookie.serialize(newSessionId));
-    return Response.json({ found: false, created: true, user }, { headers });
+    return json({ found: false, created: true, user }, { headers });
   }
 }
 
