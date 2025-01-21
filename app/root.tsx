@@ -4,10 +4,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import { v4 as uuidv4 } from "uuid";
 
 import "./tailwind.css";
+
+import { sessionCookie } from "~/cookies";
+import { redis } from "~/redis.server";
 
 import { RichTextProvider } from '~/contexts/rich-text-context';
 import StatsPanel from '~/components/stats-panel';
@@ -29,8 +34,44 @@ export const links: LinksFunction = () => [
   }
 ];
 
+export async function loader({ request }: { request: Request }) {
+  const cookieHeader = request.headers.get("Cookie");
+  const sessionId = await sessionCookie.parse(cookieHeader);
+  let userKey: string | null;
+  let user: any | null;
+
+  if (sessionId) {
+    // Has a session already, let's load it
+    userKey = await redis.get(`session:${sessionId}`);
+    user = await redis.hgetall(`user:${userKey}`);
+
+    return Response.json({ found: true, user });
+  }
+  else {
+    // Create a new user
+    const newSessionId = uuidv4();
+    userKey = uuidv4();
+    await redis.set(`session:${newSessionId}`, userKey);
+
+    await redis.hset(`user:${userKey}`, {
+      created: new Date().toISOString(),
+      lastSeen: new Date().toISOString(),
+      name: "noob",
+      bio: "I'm new here!"
+    });
+    user = await redis.hgetall(`user:${userKey}`);
+
+    // probably set their first stuff here too.
+
+    const headers = new Headers();
+    headers.append("Set-Cookie", await sessionCookie.serialize(newSessionId));
+    return Response.json({ found: false, created: true, user }, { headers });
+  }
+}
 
 export function Layout() {
+  const { user } = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -42,8 +83,7 @@ export function Layout() {
       <body>
         <RichTextProvider>
           <div className="flex h-screen">
-            {/* Left Panel */}
-            <StatsPanel id={123} />
+            <StatsPanel user={user} />
             <Outlet />
           </div>
           <ScrollRestoration />

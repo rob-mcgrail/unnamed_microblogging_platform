@@ -2,15 +2,28 @@ import TextCounters from '~/components/text-counters';
 
 
 export interface StatsPanelProps {
-  id: number;
+  user: any;
 }
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ id }) => {
+const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
   return (
-    <div key="id" className="w-1/2 bg-gray-800 text-white p-4">
-      <TextCounters />
+    <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
+      <div className="flex-1 p-4">
+        <h1 className="text-xl">{user.name}</h1>
+        <p>{user.bio}</p>
+
+      </div>
+      <div className="flex-1 p-4">
+
+
+      </div>
+      <div className="flex-1 p-4">
+
+        <TextCounters />
+      </div>
     </div>
   );
+  
 };
 
 export default StatsPanel;

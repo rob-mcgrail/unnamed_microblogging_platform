@@ -4,11 +4,12 @@ export const defaultTextHandlers = [
     priority: 5,
     visualPriority: 5,
     mimMatchLength: 1,
-    label: 'Vowels',
+    label: 'aeiou',
     startCount: 8,
     activeCount: 8,
     persistentCount: 8,
     alerted: false,
+    class: 'core',
 
     process: (
       text: string,
@@ -38,11 +39,12 @@ export const defaultTextHandlers = [
     priority: 5,
     visualPriority: 5,
     mimMatchLength: 1,
-    label: 'Constonants',
+    label: 'zxcvb...',
     startCount: 20,
     activeCount: 20,
     persistentCount: 20,
     alerted: false,
+    class: 'core',
 
     process: (
       text: string,
@@ -71,11 +73,12 @@ export const defaultTextHandlers = [
     priority: 10,
     visualPriority: 5,
     mimMatchLength: 1,
-    label: 'Space',
+    label: '<space>',
     startCount: 10,
     activeCount: 10,
     persistentCount: 10,
     alerted: false,
+    class: 'core',
 
     process: (
       text: string,
@@ -109,6 +112,7 @@ export const defaultTextHandlers = [
     activeCount: 3,
     persistentCount: 3,
     alerted: false,
+    class: 'core',
 
     process: (
       text: string,
@@ -142,6 +146,7 @@ export const defaultTextHandlers = [
     activeCount: 3,
     persistentCount: 3,
     alerted: false,
+    class: 'letters',
 
     process: (
       text: string,
@@ -170,11 +175,12 @@ export const defaultTextHandlers = [
     priority: 2,
     visualPriority: 20,
     mimMatchLength: 5,
-    label: 'hello',
+    label: '"hello"',
     startCount: 5,
     activeCount: 5,
     persistentCount: 5,
     alerted: false,
+    class: 'words',
 
     process: (
       text: string,

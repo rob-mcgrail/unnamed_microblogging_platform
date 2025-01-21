@@ -6,3 +6,8 @@ services:
       - "3000:5173"
     volumes:
       - .:/app
+    environment:
+      - REDIS_KV_REST_API_READ_ONLY_TOKEN=${REDIS_KV_REST_API_READ_ONLY_TOKEN}
+      - REDIS_KV_REST_API_TOKEN=${REDIS_KV_REST_API_TOKEN}
+      - REDIS_KV_REST_API_URL=${REDIS_KV_REST_API_URL}
+      - REDIS_KV_URL=${REDIS_KV_URL}
