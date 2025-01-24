@@ -1,8 +1,8 @@
-export const exampleBlurts = [
+export const examplePosts = [
   {
     id: 1,
     user: "johndoe",
-    content: "This is my first blurt!",
+    content: "This is my first post!",
   },
   {
     id: 2,

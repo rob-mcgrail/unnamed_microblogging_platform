@@ -1,10 +1,10 @@
-export interface BlurtProps {
+export interface PostProps {
   id: any;
   user: string;
   content: string;
 }
 
-const Blurt: React.FC<BlurtProps> = ({ id, user, content }) => {
+const Post: React.FC<PostProps> = ({ id, user, content }) => {
   return (
     <li key={id} className="bg-gray-700 p-4 rounded-lg text-white">
       <h2 className="font-bold">{user}</h2>
@@ -13,4 +13,4 @@ const Blurt: React.FC<BlurtProps> = ({ id, user, content }) => {
   );
 };
 
-export default Blurt;
+export default Post;

@@ -6,12 +6,12 @@ import { useEffect } from "react";
 
 import { useRichText } from "~/contexts/rich-text-context";
 
-export interface BlurtFormProps {
+export interface PostFormProps {
   id: any;
   limit: number;
 }
 
-const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
+const PostForm: React.FC<PostFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
   const { content, setContent, inputAlert, handleChange } = useRichText();
   const revalidator = useRevalidator();
@@ -53,4 +53,4 @@ const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   );
 };
 
-export default BlurtForm;
+export default PostForm;
