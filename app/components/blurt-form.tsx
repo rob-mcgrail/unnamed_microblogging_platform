@@ -5,7 +5,6 @@ import {
 import { useEffect } from "react";
 
 import { useRichText } from "~/contexts/rich-text-context";
-import { processContent } from "~/utils/process-content";
 
 export interface BlurtFormProps {
   id: any;
@@ -14,7 +13,7 @@ export interface BlurtFormProps {
 
 const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
-  const { content, setContent, inputAlert, textHandlers, setTextHandlers, setTextHandlerAlerts, setInputAlert } = useRichText();
+  const { content, setContent, inputAlert, handleChange } = useRichText();
   const revalidator = useRevalidator();
 
   useEffect(() => {
@@ -24,11 +23,7 @@ const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
     }
   }, [fetcher.state]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const processed = processContent(e.target.value, textHandlers, setTextHandlerAlerts, setInputAlert);
-    setTextHandlers(processed.textHandlers);
-    setContent(processed.text);
-  };
+
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg mb-4">

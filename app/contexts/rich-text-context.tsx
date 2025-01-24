@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { TextHandler } from "~/types";
+import { processContent } from "~/utils/process-content";
 
 interface RichTextContextType {
   content: string;
@@ -10,6 +11,7 @@ interface RichTextContextType {
   setInputAlert: (value: boolean) => void;
   textHandlerAlerts: string[];
   setTextHandlerAlerts: (value: any[]) => void;
+  handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const RichTextContext = createContext<RichTextContextType | undefined>(undefined);
@@ -25,6 +27,12 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
     setTextHandlers(storedTextHandlers);
   }, [storedTextHandlers]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const processed = processContent(e.target.value, textHandlers, setTextHandlerAlerts, setInputAlert);
+    setTextHandlers(processed.textHandlers);
+    setContent(processed.text);
+  };
+
   return (
     <RichTextContext.Provider value={
       { 
@@ -35,7 +43,8 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
         inputAlert,
         setInputAlert,
         textHandlerAlerts,
-        setTextHandlerAlerts
+        setTextHandlerAlerts,
+        handleChange
       }
     }>
       {children}
