@@ -1,9 +1,44 @@
 import { useRichText } from "~/contexts/rich-text-context";
 
+const colourMap = {
+  core: {
+    fore: 'text-white',
+    border: 'border-blue-900'
+  },
+  letters: {
+    fore: 'text-white',
+    border: 'border-green-900'
+  },
+  words: {
+    fore: 'text-white',
+    border: 'border-teal-900'
+  },
+  infinity: {
+    fore: 'text-yellow-300',
+    border: 'border-yellow-200'
+  },
+}
 
+export interface TextHandler {
+  id: string;
+  priority: number;
+  visualPriority: number;
+  mimMatchLength: number;
+  label: string;
+  startCount: number;
+  activeCount: number;
+  persistentCount: number;
+  alerted: boolean;
+  class: keyof typeof colourMap;
+  regex: string;
+}
 
-const TextCounters = () => {
-  const { textHandlers, textHandlerAlerts } = useRichText();
+interface TextCountersProps {
+  textHandlers: TextHandler[];
+}
+
+const TextCounters: React.FC<TextCountersProps> = ({ textHandlers }) => {
+  const { textHandlerAlerts } = useRichText();
   textHandlers.sort((a, b) => a.priority - b.priority);
   textHandlers.sort((a, b) => a.visualPriority - b.visualPriority);
 
@@ -14,28 +49,9 @@ const TextCounters = () => {
     return (hash % 5) - 2;
   };
 
-  const colourMap = {
-    core: {
-      fore: 'text-white',
-      border: 'border-blue-900'
-    },
-    letters: {
-      fore: 'text-white',
-      border: 'border-green-900'
-    },
-    words: {
-      fore: 'text-white',
-      border: 'border-teal-900'
-    },
-    infinity: {
-      fore: 'text-yellow-300',
-      border: 'border-yellow-200'
-    },
-  }
-
   return (
     <div className="flex flex-wrap gap-4 justify-center">
-      {textHandlers.map((handler: { id: string; class: keyof typeof colourMap; label: string; activeCount: number }) => (
+      {textHandlers.map((handler) => (
         <p
           key={handler.id}
           className={`border-4 p-4 ${

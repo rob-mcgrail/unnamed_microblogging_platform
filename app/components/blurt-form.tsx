@@ -14,7 +14,7 @@ export interface BlurtFormProps {
 
 const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
-  const { content, setContent, processContent, inputAlert, textHandlers, setTextHandlers } = useRichText();
+  const { content, setContent, processContent, inputAlert, textHandlers, setTextHandlers} = useRichText();
 
   useEffect(() => {
     if (fetcher.state === "idle") {

@@ -1,17 +1,16 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-
-import { defaultTextHandlers } from "~/data/text-handlers";
+import { TextHandler } from "~/components/text-counters";
 
 interface RichTextContextType {
   content: string;
   setContent: (value: string) => void;
   processContent: (text: string) => void;
-  textHandlers: any[];
+  textHandlers: TextHandler[];
   setTextHandlers: (value: any[]) => void;
   inputAlert: boolean;
   setInputAlert: (value: boolean) => void;
   textHandlerAlerts: string[];
-  setTextHandlerAlerts: (value: string[]) => void;
+  setTextHandlerAlerts: (value: any[]) => void;
 }
 
 const RichTextContext = createContext<RichTextContextType | undefined>(undefined);
@@ -40,35 +39,56 @@ function removeCharactersFromBack(
 }
 
 
-export const RichTextProvider = ({ children }: { children: ReactNode }) => {
+export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandlers: TextHandler[] }> = ({ children, storedTextHandlers }) => {
 
   const [content, setContent] = useState<string>("");
-  const [textHandlers, setTextHandlers] = useState<any[]>(defaultTextHandlers);
   const [inputAlert, setInputAlert] = useState<boolean>(false);
   const [textHandlerAlerts, setTextHandlerAlerts] = useState<string[]>([]);
+  const [textHandlers, setTextHandlers] = useState<TextHandler[]>(storedTextHandlers);
 
   const processContent = (text: string) => {
+    const process = (
+      text: string,
+      persistentCount: number,
+      regex: string
+    ): { text: string; modifiedText: string; matchCount: number } => {
+      let matchCount = 0;
+      console.log(regex);
+      // Replace matched characters and count them
+      let modifiedText = text.replace(new RegExp(regex, 'gi'), (match) => {
+        if (matchCount >= persistentCount) {
+          return match;
+        }
+        matchCount++;
+        return '';
+      });
+    
+      return {
+        text,
+        modifiedText,
+        matchCount,
+      };
+    }
+
     textHandlers.sort((a, b) => a.priority - b.priority);
     let processedText = text;
 
     textHandlers.forEach((handler) => {
-
-      const result = handler.process(processedText, handler.persistentCount);
+      const result = process(processedText, handler.persistentCount, handler.regex);
       processedText = result.modifiedText;
       handler.activeCount = handler.persistentCount - result.matchCount;
-
         
       if (handler.activeCount < 1) {
         handler.activeCount = 0;
         let significantEnding = text.slice(-handler.mimMatchLength);
-        let alertTestResult = handler.process(significantEnding, 10);
+        let alertTestResult = process(significantEnding, 10, handler.regex);
         if (alertTestResult.matchCount > 0) {
           const otherHandlersMatch = textHandlers.some((otherHandler) => {
             // Exclude the current handler
             if (otherHandler.id === handler.id) return false;
     
             // Check if the other handler matches and has activeCount > 0
-            const otherResult = otherHandler.process(significantEnding, 10);
+            const otherResult = process(significantEnding, 10, handler.regex);
             return otherResult.matchCount > 0 && otherHandler.activeCount > 0;
           });
     
@@ -118,5 +138,7 @@ export const RichTextProvider = ({ children }: { children: ReactNode }) => {
 export const useRichText = () => {
   const context = useContext(RichTextContext);
   if (!context) throw new Error("useRichText must be used within a RichTextContext Provider");
-  return context;
+  return {
+    ...context
+  };
 };

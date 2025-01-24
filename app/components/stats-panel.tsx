@@ -3,9 +3,11 @@ import TextCounters from '~/components/text-counters';
 
 export interface StatsPanelProps {
   user: any;
+  textHandlers: any[];
 }
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
+const StatsPanel: React.FC<StatsPanelProps> = ({ user, textHandlers }) => {
+
   return (
     <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
       <div className="flex-1 p-4">
@@ -19,7 +21,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
       </div>
       <div className="flex-1 p-4">
 
-        <TextCounters />
+        <TextCounters textHandlers={textHandlers} />
       </div>
     </div>
   );
