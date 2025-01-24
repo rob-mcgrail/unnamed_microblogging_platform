@@ -1,4 +1,4 @@
-import { TextHandler } from "~/components/text-counters";
+import { TextHandler } from "~/types";
 
 function removeCharactersFromBack(
   fromString: string,

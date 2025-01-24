@@ -1,8 +1,4 @@
 
-import type {
-  ActionFunctionArgs,
-} from "@remix-run/node";
-
 import Blurts from "~/components/blurts";
 import BlurtForm from "~/components/blurt-form";
 
@@ -18,11 +14,3 @@ export function Timeline() {
 }
 
 export default Timeline;
-
-export const action = async ({
-  request,
-}: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  return { updates };
-};

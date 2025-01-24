@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import { TextHandler } from "~/components/text-counters";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { TextHandler } from "~/types";
 
 interface RichTextContextType {
   content: string;
@@ -20,6 +20,10 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
   const [inputAlert, setInputAlert] = useState<boolean>(false);
   const [textHandlerAlerts, setTextHandlerAlerts] = useState<string[]>([]);
   const [textHandlers, setTextHandlers] = useState<TextHandler[]>(storedTextHandlers);
+  
+  useEffect(() => {
+    setTextHandlers(storedTextHandlers);
+  }, [storedTextHandlers]);
 
   return (
     <RichTextContext.Provider value={

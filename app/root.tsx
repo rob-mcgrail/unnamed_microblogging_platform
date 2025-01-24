@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import "./tailwind.css";
 
-import { TextHandler } from "./components/text-counters";
+import { TextHandler } from "~/types";
 
 import { sessionCookie } from "~/cookies";
 import { redis } from "~/redis.server";
@@ -82,7 +82,7 @@ export function Layout() {
       <body>
         <RichTextProvider storedTextHandlers={textHandlers}>
           <div className="flex h-screen">
-            <StatsPanel user={user} textHandlers={textHandlers} />
+            <StatsPanel user={user} />
             <Outlet />
           </div>
           <ScrollRestoration />

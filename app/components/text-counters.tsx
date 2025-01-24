@@ -1,4 +1,5 @@
 import { useRichText } from "~/contexts/rich-text-context";
+import { TextHandler } from "~/types";
 
 const colourMap = {
   core: {
@@ -19,29 +20,11 @@ const colourMap = {
   },
 }
 
-export interface TextHandler {
-  id: string;
-  priority: number;
-  visualPriority: number;
-  mimMatchLength: number;
-  label: string;
-  startCount: number;
-  activeCount: number;
-  persistentCount: number;
-  alerted: boolean;
-  class: keyof typeof colourMap;
-  regex: string;
-}
-
-interface TextCountersProps {
-  textHandlers: TextHandler[];
-}
-
-const TextCounters: React.FC<TextCountersProps> = ({ textHandlers }) => {
-  const { textHandlerAlerts } = useRichText();
+const TextCounters = () => {
+  const { textHandlerAlerts, textHandlers } = useRichText();
   textHandlers.sort((a, b) => a.priority - b.priority);
   textHandlers.sort((a, b) => a.visualPriority - b.visualPriority);
-  console.log(textHandlerAlerts);
+
   const getRotation = (id: string) => {
     const hash = id
       .split("")
