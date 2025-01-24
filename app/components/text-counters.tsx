@@ -41,7 +41,7 @@ const TextCounters: React.FC<TextCountersProps> = ({ textHandlers }) => {
   const { textHandlerAlerts } = useRichText();
   textHandlers.sort((a, b) => a.priority - b.priority);
   textHandlers.sort((a, b) => a.visualPriority - b.visualPriority);
-
+  console.log(textHandlerAlerts);
   const getRotation = (id: string) => {
     const hash = id
       .split("")

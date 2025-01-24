@@ -4,6 +4,7 @@ import {
 import { useEffect } from "react";
 
 import { useRichText } from "~/contexts/rich-text-context";
+import { processContent } from "~/utils/process-content";
 
 export interface BlurtFormProps {
   id: any;
@@ -14,20 +15,22 @@ export interface BlurtFormProps {
 
 const BlurtForm: React.FC<BlurtFormProps> = ({ id, limit  }) => {
   const fetcher = useFetcher();
-  const { content, setContent, processContent, inputAlert, textHandlers, setTextHandlers} = useRichText();
+  const { content, setContent, inputAlert, textHandlers, setTextHandlers, setTextHandlerAlerts, setInputAlert} = useRichText();
 
   useEffect(() => {
     if (fetcher.state === "idle") {
       setContent('');
-      setTextHandlers(textHandlers.map((handler) => {
-        handler.persistentCount = handler.activeCount;
-        return handler;
-      }));
+      // setTextHandlers(textHandlers.map((handler) => {
+      //   handler.persistentCount = handler.activeCount;
+      //   return handler;
+      // }));
     }
   }, [fetcher.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    processContent(e.target.value);
+    const processed = processContent(e.target.value, textHandlers, setTextHandlerAlerts, setInputAlert);
+    setTextHandlers(processed.textHandlers);
+    setContent(processed.text);
   };
 
   return (
