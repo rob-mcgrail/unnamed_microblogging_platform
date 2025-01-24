@@ -52,30 +52,28 @@ export const processContent = (text: string, textHandlers: TextHandler[], setTex
     const result = process(processedText, handler.persistentCount, handler.regex);
     processedText = result.modifiedText;
     handler.activeCount = handler.persistentCount - result.matchCount;
-      
-    if (handler.activeCount < 1) {
+    
+    // If this handler is maxed out... should we trigger an alert?
+    if (handler.activeCount < 1 && setTextHandlerAlerts) {
       handler.activeCount = 0;
+
+      // Was it the last character that maxed us out?
       let significantEnding = text.slice(-handler.mimMatchLength);
       let alertTestResult = process(significantEnding, 10, handler.regex);
       if (alertTestResult.matchCount > 0) {
 
-
-        // BROKEN
-        const otherHandlersMatch = textHandlers.some((otherHandler) => {
-          // Exclude the current handler
-          if (otherHandler.id === handler.id) return false;
-  
-          // Check if the other handler matches and has activeCount > 0
-          const otherResult = process(significantEnding, 10, handler.regex);
+        // Avoiding alerting if we can still get the character from another handler...
+        const otherHandlersMatchAndHaveTokens = textHandlers.some((otherHandler) => {
+          if (otherHandler.id === handler.id) return false;  
+          const otherResult = process(significantEnding, 10, otherHandler.regex);
           return otherResult.matchCount > 0 && otherHandler.activeCount > 0;
         });
   
-        if (setTextHandlerAlerts && otherHandlersMatch) {
+        // Ok let's alert
+        if (!otherHandlersMatchAndHaveTokens) {
           setTextHandlerAlerts((prev: any) => [...prev, handler.id]);
           setTimeout(() => setTextHandlerAlerts((prev: any[]) => prev.filter((id) => id !== handler.id)), 300);
         }
-
-        
       }
       handler.alerted = true;
     }
@@ -84,6 +82,7 @@ export const processContent = (text: string, textHandlers: TextHandler[], setTex
     }
   });
   
+  // If we have some unaccounted for characters, after every handler, let's remove them
   if (processedText.length > 0) {
     text = removeCharactersFromBack(text, processedText);
 
@@ -91,7 +90,6 @@ export const processContent = (text: string, textHandlers: TextHandler[], setTex
       setInputAlert(true);
       setTimeout(() => setInputAlert(false), 300);
     }
-
   }
 
   return { text, textHandlers };
