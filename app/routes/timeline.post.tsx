@@ -13,8 +13,16 @@ export const action = async ({
   const userKey = await fetchUserKeyFromRequest(request);
   const formData = await request.formData();
   const { content } = Object.fromEntries(formData);
-  const { user, textHandlers} = await fetchExistingUser(userKey);
+  const { textHandlers} = await fetchExistingUser(userKey);
   const output = processContent(content as string, textHandlers as TextHandler[]);
+
+  // if content != output, rename user to haxor
+
+  // increment users post count
+
+  // create the damn post, and add it to the timeline list
+
+  // add it to a user's post list too.
 
   const updatedHandlers = output.textHandlers.map((handler) => {
     handler.persistentCount = handler.activeCount;

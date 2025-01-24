@@ -23,8 +23,6 @@ const PostForm: React.FC<PostFormProps> = ({ id, limit  }) => {
     }
   }, [fetcher.state]);
 
-
-
   return (
     <div className="bg-gray-800 p-4 rounded-lg mb-4">
       <fetcher.Form key={id} action="/timeline/post" method="post" className="flex flex-col">
