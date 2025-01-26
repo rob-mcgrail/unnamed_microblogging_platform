@@ -1,13 +1,14 @@
+import { Post as PostType } from "~/types";
+
 export interface PostProps {
-  id: any;
-  user: string;
-  content: string;
+  post: PostType;
 }
 
-const Post: React.FC<PostProps> = ({ id, user, content }) => {
+const Post: React.FC<PostProps> = ( { post } ) => {
+  const { name, content } = post;
   return (
-    <li key={id} className="bg-gray-700 p-4 rounded-lg text-white">
-      <h2 className="font-bold">{user}</h2>
+    <li className="bg-gray-700 p-4 rounded-lg text-white">
+      <h2 className="font-bold">{name}</h2>
       <p>{content}</p>
     </li>
   );

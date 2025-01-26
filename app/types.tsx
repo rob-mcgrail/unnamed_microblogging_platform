@@ -8,6 +8,27 @@ export interface TextHandler {
   activeCount: number;
   persistentCount: number;
   alerted: boolean;
-  class: 'core' | 'letters' | 'words' | 'infinity';
+  class: string;
   regex: string;
+}
+
+export interface User {
+  created: string;
+  lastSeen: string;
+  name: string;
+  bio: string;
+  posts: number;
+}
+
+export interface Post {
+  id: string;
+  authorId: string;
+  content: string;
+  created: string;
+  name: string;
+  replies: number;
+  favs: number;
+  reposts: number;
+  flags: string;
+  repliesTo: string | null;
 }
