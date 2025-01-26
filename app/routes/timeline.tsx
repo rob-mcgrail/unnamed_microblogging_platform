@@ -13,7 +13,7 @@ import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 export async function loader({ request }: { request: Request }) {
   const userKey = await fetchUserKeyFromRequest(request);
 
-  const postKeys = await redis.lrange('timeline', 0, 50);
+  const postKeys = await redis.lrange('timeline', 0, 100);
 
   const pipeline = redis.pipeline();
   postKeys.forEach((postId: string) => {
