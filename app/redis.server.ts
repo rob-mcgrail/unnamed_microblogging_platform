@@ -1,6 +1,15 @@
-import { Redis } from '@upstash/redis';
+import Redis from "ioredis";
 
-export const redis = new Redis({
-  url: process.env.REDIS_KV_REST_API_URL,
-  token: process.env.REDIS_KV_REST_API_TOKEN,
-});
+if (!(global as any).redis) {
+  (global as any).redis = new Redis({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : undefined,
+    username: "default",
+    password: process.env.REDIS_PASSWORD,
+    connectTimeout: 5000,
+    disconnectTimeout: 1000,
+    tls: {}
+  });
+}
+
+export const redis = (global as any).redis;

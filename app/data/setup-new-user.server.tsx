@@ -15,8 +15,9 @@ const setupNewUser = async (userKey: string): Promise<{ user: User | null, textH
   });
 
   const user = await redis.hgetall(`user:${userKey}`) as User | null;
-
-  await redis.json.set(`user:${userKey}:textHandlers`, '$', defaultTextHandlers);
+  
+  const jsonString = JSON.stringify(defaultTextHandlers);
+  await redis.set(`user:${userKey}:textHandlers`, jsonString);
   
   return {
     user,

@@ -41,19 +41,26 @@ export const action = async ({
     repost: false,
   }
 
-  await redis.hset(`post:${userKey}:${postId}`, post);
-  await redis.lpush(`timeline`, `post:${userKey}:${postId}`);
-  await redis.lpush(`timeline:${userKey}`, `post:${userKey}:${postId}`);
+  const pipeline = redis.pipeline();
 
-  const updatedHandlers = output.textHandlers.map((handler) => {
-    handler.persistentCount = handler.activeCount;
-    return handler;
-  }).filter((handler) => handler.activeCount > 0);
-
-  await redis.json.set(`user:${userKey}:textHandlers`, '$', updatedHandlers as []);
-
-  // increment users post count
-  await redis.hincrby(`user:${userKey}`, "posts", 1);
+  pipeline.hset(`post:${userKey}:${postId}`, post);
+  
+  pipeline.lpush(`timeline`, `post:${userKey}:${postId}`);
+  pipeline.lpush(`timeline:${userKey}`, `post:${userKey}:${postId}`);
+  
+  const updatedHandlers = output.textHandlers
+    .map((handler) => {
+      handler.persistentCount = handler.activeCount;
+      return handler;
+    })
+    .filter((handler) => handler.activeCount > 0);
+  
+  const jsonString = JSON.stringify(updatedHandlers);
+  pipeline.set(`user:${userKey}:textHandlers`, jsonString);
+  
+  pipeline.hincrby(`user:${userKey}`, "posts", 1);
+  
+  await pipeline.exec();
 
   return { };
 };
