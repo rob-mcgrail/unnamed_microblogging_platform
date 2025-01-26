@@ -23,6 +23,11 @@ export const action = async ({
     await redis.hset(`user:${userKey}`, { name: 'haxor' });
   }
 
+  if (output.text.length < 1) {
+    // noop if it's empty
+    return { };
+  }
+
   const name = await redis.hget(`user:${userKey}`, "name");
   const postId = uuidv4();
   
