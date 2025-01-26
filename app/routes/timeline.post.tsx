@@ -36,7 +36,9 @@ export const action = async ({
     favs: 0,
     reposts: 0,
     flags: '',
-    repliesTo: null
+    repliesTo: null,
+    repostOf: '',
+    repost: false,
   }
 
   await redis.hset(`post:${userKey}:${postId}`, post);

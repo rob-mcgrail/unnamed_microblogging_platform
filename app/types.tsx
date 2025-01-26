@@ -31,4 +31,6 @@ export interface Post {
   reposts: number;
   flags: string;
   repliesTo: string | null;
+  repostOf: string | null;
+  repost: boolean;
 }
