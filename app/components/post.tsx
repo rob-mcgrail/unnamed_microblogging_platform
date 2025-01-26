@@ -9,7 +9,7 @@ const Post: React.FC<PostProps> = ( { post } ) => {
   return (
     <li className="bg-gray-700 p-4 rounded-lg text-white">
       <h2 className="font-bold">{name}</h2>
-      <p className="whitespace-pre-line">{content}</p>
+      <p className="whitespace-pre">{content}</p>
     </li>
   );
 };
