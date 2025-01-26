@@ -14,14 +14,17 @@ export async function loader({ request }: { request: Request }) {
   const userKey = await fetchUserKeyFromRequest(request);
 
   const postKeys = await redis.lrange('timeline', 0, 50);
-  const posts = await Promise.all(postKeys.map(async (postId) => {
-    const post = await redis.hgetall(postId) as Post | null;
-    if (post) {
-      return post;
-    }
-  })) as Post[];
 
-  
+  const pipeline = redis.pipeline();
+  postKeys.forEach((postId: string) => {
+    pipeline.hgetall(postId); 
+  });
+
+  const results = await pipeline.exec();
+
+  const posts = results
+    .map(([err, post]: [Error | null, Post | null]) => (err ? null : post)) 
+    .filter((post: Post | null) => post !== null) as Post[]; 
 
   return json({ posts });
 }
