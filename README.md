@@ -1,6 +1,7 @@
 # TODOs
 
 * Factory for text handlers
+* Text handlers should have a rarity score and a prop just for their link
 * Context for "jokers"
 * Context for "money"
 * Favs
