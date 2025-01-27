@@ -2,10 +2,17 @@ import { redis } from "~/redis.server";
 import { User, TextHandler } from "~/types";
 
 const fetchExistingUser = async (userKey: string): Promise<{ user: User | null, textHandlers: TextHandler[] }> => {
-  await redis.hset(`user:${userKey}`, { lastSeen: new Date().toISOString() });
   const user = await redis.hgetall(`user:${userKey}`) as User | null;
+  
+  if (!user) {
+    return {
+      user: null,
+      textHandlers: []
+    };
+  }
 
-  // const textHandlers = await redis.call("JSON.GET", `user:${userKey}:textHandlers`) as TextHandler[];
+  await redis.hset(`user:${userKey}`, { lastSeen: new Date().toISOString() });
+
   const jsonString = await redis.get(`user:${userKey}:textHandlers`);
   const textHandlers = JSON.parse(jsonString) as TextHandler[];
   return {

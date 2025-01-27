@@ -7,11 +7,10 @@ import { useEffect } from "react";
 import { useRichText } from "~/contexts/rich-text-context";
 
 export interface PostFormProps {
-  id: any;
   limit: number;
 }
 
-const PostForm: React.FC<PostFormProps> = ({ id, limit  }) => {
+const PostForm: React.FC<PostFormProps> = ({ limit  }) => {
   const fetcher = useFetcher();
   const { content, setContent, inputAlert, handleChange } = useRichText();
   const revalidator = useRevalidator();
@@ -28,7 +27,7 @@ const PostForm: React.FC<PostFormProps> = ({ id, limit  }) => {
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg mb-4">
-      <fetcher.Form key={id} action="/timeline/post" method="post" className="flex flex-col">
+      <fetcher.Form action="/timeline/post" method="post" className="flex flex-col">
         <textarea
         className={`rounded-lg p-3 mb-3 resize-none focus:outline-none
           transition-all duration-300 ${
