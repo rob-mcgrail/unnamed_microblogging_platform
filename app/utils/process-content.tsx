@@ -25,11 +25,17 @@ function removeCharactersFromBack(
 const process = (
   text: string,
   persistentCount: number,
-  regex: string
+  regex: string,
+  startCount: number,
 ): { text: string; modifiedText: string; matchCount: number } => {
   let matchCount = 0;
   // Replace matched characters and count them
   let modifiedText = text.replace(new RegExp(regex, 'gi'), (match) => {
+    // Infinity mode
+    if (startCount === -1) {
+      matchCount++;
+      return '';
+    }
     if (matchCount >= persistentCount) {
       return match;
     }
@@ -44,14 +50,23 @@ const process = (
   };
 }
 
-export const processContent = (text: string, textHandlers: TextHandler[], setTextHandlerAlerts?: any, setInputAlert?: any) => {
+export const processContent = (text: string, textHandlers: TextHandler[], setTextHandlerAlerts?: any, setInputAlert?: any, setTextHandlerActivity?: any) => {
   textHandlers.sort((a, b) => a.priority - b.priority);
   let processedText = text;
 
   textHandlers.forEach((handler) => {
-    const result = process(processedText, handler.persistentCount, handler.regex);
+    const result = process(processedText, handler.persistentCount, handler.regex, handler.startCount);
     processedText = result.modifiedText;
     handler.activeCount = handler.persistentCount - result.matchCount;
+
+    if (setTextHandlerActivity && (handler.activeCount < handler.persistentCount) && (handler.activeCount > 0)) {
+      let significantEnding = text.slice(-handler.mimMatchLength);
+      let alertTestResult = process(significantEnding, 10, handler.regex, handler.startCount);
+      if (alertTestResult.matchCount > 0) {
+        setTextHandlerActivity((prev: any) => [...prev, handler.id]);
+        setTimeout(() => setTextHandlerActivity((prev: any[]) => prev.filter((id) => id !== handler.id)), 100);
+      }
+    }
     
     // If this handler is maxed out... should we trigger an alert?
     if (handler.activeCount < 1 && setTextHandlerAlerts) {
@@ -59,13 +74,13 @@ export const processContent = (text: string, textHandlers: TextHandler[], setTex
 
       // Was it the last character that maxed us out?
       let significantEnding = text.slice(-handler.mimMatchLength);
-      let alertTestResult = process(significantEnding, 10, handler.regex);
+      let alertTestResult = process(significantEnding, 10, handler.regex, handler.startCount);
       if (alertTestResult.matchCount > 0) {
 
         // Avoiding alerting if we can still get the character from another handler...
         const otherHandlersMatchAndHaveTokens = textHandlers.some((otherHandler) => {
           if (otherHandler.id === handler.id) return false;  
-          const otherResult = process(significantEnding, 10, otherHandler.regex);
+          const otherResult = process(significantEnding, 10, otherHandler.regex, otherHandler.startCount);
           return otherResult.matchCount > 0 && otherHandler.activeCount > 0;
         });
   
@@ -75,10 +90,6 @@ export const processContent = (text: string, textHandlers: TextHandler[], setTex
           setTimeout(() => setTextHandlerAlerts((prev: any[]) => prev.filter((id) => id !== handler.id)), 300);
         }
       }
-      handler.alerted = true;
-    }
-    else {
-      handler.alerted = false;
     }
   });
   

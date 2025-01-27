@@ -8,7 +8,7 @@ export interface TextHandler {
   activeCount: number;
   persistentCount: number;
   alerted: boolean;
-  class: string;
+  class: 'core' | 'letters' | 'words';
   regex: string;
 }
 

@@ -15,8 +15,8 @@ const colourMap = {
     border: 'border-teal-900'
   },
   infinity: {
-    fore: 'text-yellow-300',
-    border: 'border-yellow-200'
+    fore: 'text-yellow-500',
+    border: 'border-yellow-500'
   },
 }
 export interface TextCounterProps {
@@ -24,13 +24,13 @@ export interface TextCounterProps {
 }
 
 const TextCounter: React.FC<TextCounterProps> = ({ handler }) => {
-  const { textHandlerAlerts, content, setContent, handleChange } = useRichText();
+  const { textHandlerActivity, textHandlerAlerts, content, setContent, handleChange } = useRichText();
 
   const getRotation = (id: string) => {
     const hash = id
       .split("")
       .reduce((acc: any, char: string) => acc + char.charCodeAt(0), 0);
-    return (hash % 5) - 2;
+    return (hash % 6) - 2;
   };
 
   const triggerHandleChange = (value: string) => {
@@ -52,6 +52,8 @@ const TextCounter: React.FC<TextCounterProps> = ({ handler }) => {
     return;
   };
 
+  const visualClass = handler.startCount === -1 ? 'infinity' : handler.class;
+
   return (
     <p
       key={handler.id}
@@ -59,7 +61,11 @@ const TextCounter: React.FC<TextCounterProps> = ({ handler }) => {
       className={`border-4 p-4 transition-all duration-300 ${
         textHandlerAlerts.includes(handler.id)
           ? "border-red-500 text-red-500"
-          : `${colourMap[handler.class].border} ${colourMap[handler.class].fore}`
+          : `${colourMap[visualClass].border} ${colourMap[visualClass].fore}`
+      } ${
+        textHandlerActivity.includes(handler.id)
+          ? "saturate-200 brightness-200"
+          : "border-solid "
       } ${["letters", "words"].includes(handler.class) ? "cursor-pointer hover:underline hover:scale-105" : ""}`}
       style={{
         width: "auto", // Adjust to fit content
@@ -67,7 +73,7 @@ const TextCounter: React.FC<TextCounterProps> = ({ handler }) => {
         transform: `rotate(${getRotation(handler.id)}deg)`,
       }}
     >
-      {handler.label}: {handler.activeCount}
+      {handler.label}{handler.startCount != -1 && `: ${handler.activeCount}`}
     </p>
   );
 };

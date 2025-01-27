@@ -11,6 +11,8 @@ interface RichTextContextType {
   setInputAlert: (value: boolean) => void;
   textHandlerAlerts: string[];
   setTextHandlerAlerts: (value: any[]) => void;
+  textHandlerActivity: string[];
+  setTextHandlerActivity: (value: any[]) => void;
   handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -21,6 +23,7 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
   const [content, setContent] = useState<string>("");
   const [inputAlert, setInputAlert] = useState<boolean>(false);
   const [textHandlerAlerts, setTextHandlerAlerts] = useState<string[]>([]);
+  const [textHandlerActivity, setTextHandlerActivity] = useState<string[]>([]);
   const [textHandlers, setTextHandlers] = useState<TextHandler[]>(storedTextHandlers);
   
   useEffect(() => {
@@ -28,7 +31,7 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
   }, [storedTextHandlers]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const processed = processContent(e.target.value, textHandlers, setTextHandlerAlerts, setInputAlert);
+    const processed = processContent(e.target.value, textHandlers, setTextHandlerAlerts, setInputAlert, setTextHandlerActivity);
     setTextHandlers(processed.textHandlers);
     setContent(processed.text);
   };
@@ -44,6 +47,8 @@ export const RichTextProvider: React.FC<{ children: ReactNode; storedTextHandler
         setInputAlert,
         textHandlerAlerts,
         setTextHandlerAlerts,
+        textHandlerActivity,
+        setTextHandlerActivity,
         handleChange
       }
     }>

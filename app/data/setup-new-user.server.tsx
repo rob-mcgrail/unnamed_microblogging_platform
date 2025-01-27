@@ -21,7 +21,7 @@ const setupNewUser = async (userKey: string): Promise<{ user: User | null, textH
   
   return {
     user,
-    textHandlers: defaultTextHandlers
+    textHandlers: defaultTextHandlers as TextHandler[]
   };
 }
 

@@ -63,7 +63,7 @@ export const textHandlers = [
     persistentCount: 3,
     alerted: false,
     class: 'core',
-    "regex": "[\\?\\%\\&\\*\\_\\-\\\"\\'\\(\\)\\\\]"
+    "regex": "[\\!\\?\\%\\&\\*\\_\\-\\\"\\'\\(\\)\\\\]"
   },
   {
     id: 'a',
@@ -90,10 +90,23 @@ export const textHandlers = [
     alerted: false,
     class: 'words',
     regex: "hello",
+  },
+  {
+    id: '!-infinity',
+    priority: 1,
+    visualPriority: 50,
+    mimMatchLength: 1,
+    label: '! ∞',
+    startCount: -1,
+    activeCount: 10000,
+    persistentCount: 10000,
+    alerted: false,
+    class: 'letters',
+    regex: "[\\!]",
   }
 ];
 
 export const defaultTextHandlers = [
   ...textHandlers.filter((handler) => handler.class === 'core'),
-  ...textHandlers.filter((handler) => ['hello', 'a'].includes(handler.id)),
+  ...textHandlers.filter((handler) => ['hello', 'a', '!-infinity'].includes(handler.id)),
 ];

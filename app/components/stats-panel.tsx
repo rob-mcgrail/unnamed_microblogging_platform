@@ -12,8 +12,13 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
       <div className="flex-1 p-4">
         <h1 className="text-xl">{user.name}</h1>
         <p>{user.bio}</p>
+        <div className="py-4">
+          <p className="text-2xl text-yellow-500 font-bold mb-4">$1</p>
+        </div>
+        
       </div>
       <div className="flex-1 p-4">
+
       </div>
       <div className="flex-1 p-4">
         <TextCounters />
