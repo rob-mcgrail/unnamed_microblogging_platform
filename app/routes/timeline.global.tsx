@@ -31,7 +31,7 @@ export function Timeline() {
     <div className="flex-1 bg-gray-900 p-4 flex flex-col">
       <PostForm limit={100} />
       <Posts posts={posts} />
-  </div>
+    </div>
   );
 }
 
