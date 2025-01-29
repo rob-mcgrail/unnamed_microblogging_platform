@@ -3,16 +3,17 @@ import {
   useRevalidator,
 } from "@remix-run/react";
 import { useEffect } from "react";
-import { json } from "@remix-run/node";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 
 import { Post } from "~/types";
 import Posts from "~/components/posts";
-import PostForm from "~/components/post-form";
 
 import fetchPostsForKey from "~/data/fetch-posts-for-key.server";
 
-export async function loader({ request }: { request: Request }) {
-  const posts = await fetchPostsForKey(request, 'timeline');
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const userId = params.userId;
+
+  const posts = await fetchPostsForKey(request, `timeline:${userId}`);
   return json({ posts: posts });
 }
 
@@ -23,15 +24,21 @@ export function Timeline() {
   useEffect(() => {
     const interval = setInterval(() => {
       revalidator.revalidate();
-    }, 3000); 
+    }, 30000); 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="flex-1 bg-gray-900 p-4 flex flex-col">
-      <PostForm limit={100} />
-      <Posts posts={posts} />
-  </div>
+      <Posts posts={posts}>
+        <a
+          href="/timeline/global"
+          className="w-auto flex items-center justify-center gap-2 px-4 py-3 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded-lg font-medium transition-all"
+        >
+          <span>🔙 Go Back</span>
+        </a>
+      </Posts>
+    </div>
   );
 }
 

@@ -11,7 +11,8 @@ const setupNewUser = async (userKey: string): Promise<{ user: User | null, textH
     lastSeen: new Date().toISOString(),
     name: `noob${incr}`,
     bio: "I'm new here!",
-    posts: 0
+    posts: 0,
+    id: userKey
   });
 
   const user = await redis.hgetall(`user:${userKey}`) as User | null;

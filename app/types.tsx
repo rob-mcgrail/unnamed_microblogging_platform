@@ -1,4 +1,4 @@
-export interface TextHandler {
+export type TextHandler = {
   id: string;
   priority: number;
   visualPriority: number;
@@ -12,15 +12,16 @@ export interface TextHandler {
   regex: string;
 }
 
-export interface User {
+export type User = {
   created: string;
   lastSeen: string;
   name: string;
   bio: string;
   posts: number;
+  id: string;
 }
 
-export interface Post {
+export type Post = {
   id: string;
   authorId: string;
   content: string;
