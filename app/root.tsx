@@ -43,12 +43,13 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: { request: Request }) {
   const cookieHeader = request.headers.get("Cookie");
+  const country = request.headers.get("X-Vercel-IP-Country");
   const sessionId = await sessionCookie.parse(cookieHeader);
 
   if (sessionId) {
     // Has a session already, let's load it
     const userKey = await fetchUserKeyFromSession(sessionId);
-    const data = await fetchExistingUser(userKey);
+    const data = await fetchExistingUser(userKey, country);
 
     return json({ found: true, created: false, data });
   }
@@ -58,7 +59,7 @@ export async function loader({ request }: { request: Request }) {
     const userKey = uuidv4();
     await redis.set(`session:${newSessionId}`, userKey);
 
-    const data = await setupNewUser(userKey);
+    const data = await setupNewUser(userKey, country);
 
     const headers = new Headers();
     headers.append("Set-Cookie", await sessionCookie.serialize(newSessionId));
@@ -70,6 +71,9 @@ export async function loader({ request }: { request: Request }) {
 
 export function Layout() {
   const { data: { user, textHandlers } } = useLoaderData<typeof loader>() as { data: { user: User | null, textHandlers: TextHandler[] } };
+  if (!user) {
+    return <h1>USER ISSUE</h1>;
+  }
 
   return (
     <html lang="en">

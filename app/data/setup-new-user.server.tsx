@@ -2,7 +2,7 @@ import { redis } from "~/redis.server";
 import { defaultTextHandlers } from "./text-handlers.server";
 import { User, TextHandler } from "~/types";
 
-const setupNewUser = async (userKey: string): Promise<{ user: User | null, textHandlers: TextHandler[] }> => {
+const setupNewUser = async (userKey: string, country?: string | null): Promise<{ user: User | null, textHandlers: TextHandler[] }> => {
   await redis.incr("userCount");
   const incr = await redis.get("userCount");
 
@@ -12,7 +12,8 @@ const setupNewUser = async (userKey: string): Promise<{ user: User | null, textH
     name: `noob${incr}`,
     bio: "I'm new here!",
     posts: 0,
-    id: userKey
+    id: userKey,
+    country: country
   });
 
   const user = await redis.hgetall(`user:${userKey}`) as User | null;

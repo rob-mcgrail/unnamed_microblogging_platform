@@ -19,6 +19,7 @@ export type User = {
   bio: string;
   posts: number;
   id: string;
+  country: string | null;
 }
 
 export type Post = {
