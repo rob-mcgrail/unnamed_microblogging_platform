@@ -4,7 +4,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
+  ShouldRevalidateFunction
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -96,6 +97,18 @@ export function Layout() {
     </html>
   );
 }
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  defaultShouldRevalidate,
+  formMethod,
+}) => {
+  if (formMethod == 'POST') {
+    return defaultShouldRevalidate;
+  }
+  else {
+    return false;
+  }
+};
 
 export default function App() {
   return <Outlet />;

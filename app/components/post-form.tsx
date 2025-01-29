@@ -1,6 +1,5 @@
 import { 
   useFetcher,
-  useRevalidator
 } from "@remix-run/react";
 import { useEffect } from "react";
 
@@ -13,15 +12,10 @@ export interface PostFormProps {
 const PostForm: React.FC<PostFormProps> = ({ limit  }) => {
   const fetcher = useFetcher();
   const { content, setContent, inputAlert, handleChange } = useRichText();
-  const revalidator = useRevalidator();
 
   useEffect(() => {
     if (fetcher.state === "submitting") {
       setContent('');
-      revalidator.revalidate();
-    }
-    if (fetcher.state === "idle") {
-      revalidator.revalidate();
     }
   }, [fetcher.state]);
 
