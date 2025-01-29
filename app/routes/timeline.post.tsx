@@ -43,7 +43,7 @@ export const action = async ({
     flags: '',
     repliesTo: null,
     repostOf: '',
-    repost: false,
+    repost: null,
   }
 
   const pipeline = redis.pipeline();

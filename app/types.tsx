@@ -35,5 +35,7 @@ export type Post = {
   flags: string;
   repliesTo: string | null;
   repostOf: string | null;
+  repostedBy: string | null;
+  repostedByName: string | null;
   repost: boolean;
 }

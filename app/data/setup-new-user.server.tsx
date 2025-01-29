@@ -3,7 +3,7 @@ import { defaultTextHandlers } from "./text-handlers.server";
 import { User, TextHandler } from "~/types";
 
 const setupNewUser = async (userKey: string, country?: string | null): 
-  Promise<{ user: User | null, textHandlers: TextHandler[], favs: string[] }> => {
+  Promise<{ user: User | null, textHandlers: TextHandler[], favs: string[], reposts: string[] }> => {
 
   await redis.incr("userCount");
   const incr = await redis.get("userCount");
@@ -27,7 +27,8 @@ const setupNewUser = async (userKey: string, country?: string | null):
   return {
     user,
     textHandlers: defaultTextHandlers as TextHandler[],
-    favs: []
+    favs: [],
+    reposts: []
   };
 }
 

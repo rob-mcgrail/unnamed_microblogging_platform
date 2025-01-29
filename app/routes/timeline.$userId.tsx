@@ -21,12 +21,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const posts = await fetchPostsForKey(request, `timeline:${userId}`);
   const userKey = await fetchUserKeyFromRequest(request);
   const favs = await redis.smembers(`favs:${userKey}`);
+  const reposts = await redis.smembers(`reposts:${userKey}`);
 
-  return json({ posts: posts, user: user, favs: favs });
+  return json({ posts: posts, user: user, favs: favs, reposts });
 }
 
 export function Timeline() {
-  const { posts, user, favs } = useLoaderData<typeof loader>() as { posts: Post[], user: User | null, favs: string[] };
+  const { posts, user, favs, reposts } = useLoaderData<typeof loader>() as { posts: Post[], user: User | null, favs: string[], reposts: string[] };
   const revalidator = useRevalidator();
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export function Timeline() {
 
   return (
     <div className="flex-1 bg-gray-900 p-4 flex flex-col">
-      <Posts posts={posts} favs={favs}>
+      <Posts posts={posts} favs={favs} reposts={reposts}>
         { user && (
           <div className="pb-8 items-center">
             <UserInfo user={user} />

@@ -2,7 +2,7 @@ import { redis } from "~/redis.server";
 import { User, TextHandler } from "~/types";
 
 const fetchExistingUser = async (userKey: string, country?: string | null): 
-  Promise<{ user: User | null, textHandlers: TextHandler[], favs: string[] }> => {
+  Promise<{ user: User | null, textHandlers: TextHandler[], favs: string[], reposts: string[] }> => {
 
   const user = await redis.hgetall(`user:${userKey}`) as User | null;
   
@@ -10,7 +10,8 @@ const fetchExistingUser = async (userKey: string, country?: string | null):
     return {
       user: null,
       textHandlers: [],
-      favs: []
+      favs: [],
+      reposts: []
     };
   }
 
@@ -23,12 +24,14 @@ const fetchExistingUser = async (userKey: string, country?: string | null):
 
   const jsonString = await redis.get(`user:${userKey}:textHandlers`);
   const favs = await redis.smembers(`favs:${userKey}`);
+  const reposts = await redis.smembers(`reposts:${userKey}`);
 
   const textHandlers = JSON.parse(jsonString) as TextHandler[];
   return {
     user,
     textHandlers,
-    favs
+    favs,
+    reposts
   };
 }
 
