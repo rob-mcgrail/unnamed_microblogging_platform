@@ -11,26 +11,42 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   const { name, authorId, content, repost, repostedByName } = post;
   const fetcher = useFetcher();
 
+  let optFavorite = favorite;
+  let optFavs = Number(post.favs);
+
+  if (fetcher.formAction === `/post/favorite/${post.id}` && fetcher.state) {
+    optFavs += optFavorite ? -1 : 1;
+    optFavorite = !optFavorite;
+  }
+
   const favorites = (
     <fetcher.Form method="post" action={`/post/favorite/${post.id}`}>
     <button
       type="submit"
-      className={`px-2 ${!favorite ? "saturate-0" : ""} ${
-        favorite ? "cursor-default" : "cursor-pointer"
+      className={`px-2 ${!optFavorite ? "saturate-0" : ""} ${
+        optFavorite ? "cursor-default" : "cursor-pointer"
       }`}
     >
-      ⭐ {post.favs}
+      ⭐ {optFavs}
     </button>
   </fetcher.Form>
   );
+
+  let optReposted = reposted;
+  let optReposts = Number(post.reposts);
+  
+  if (fetcher.formAction === `/post/repost/${post.id}` && fetcher.state) {
+    optReposts += optReposted ? -1 : 1;
+    optReposted = !optReposted;
+  }
 
   const reposts = (
     <fetcher.Form method="post" action={`/post/repost/${post.id}`}>
     <button
       type="submit"
-      className={`text-green-500 px-2 ${(reposted || repost) ? "saturate-100" : "saturate-0"}`}
+      className={`text-green-500 px-2 ${(optReposted || repost) ? "saturate-100" : "saturate-0"}`}
     >
-      ♻️ {post.reposts}
+      ♻️ {optReposts}
     </button>
   </fetcher.Form>
   );

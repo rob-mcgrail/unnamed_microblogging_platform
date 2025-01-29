@@ -29,10 +29,15 @@ export const action = async ({
   const added = await redis.sadd(`reposts:${userKey}`, `${postId}`);
 
   if (post.repostedBy == user.id) {
-    await redis.srem(`reposts:${userKey}`, `${post.repostOf}`);
-    await redis.hincrby(`post:${post.repostOf}`, "reposts", -1);
-    await redis.lrem(`timeline`, 0, `post:${postId}`);
-    await redis.lrem(`timeline:${userKey}`, 0, `post:${postId}`);
+    const pipeline = redis.pipeline();
+
+    pipeline.srem(`reposts:${userKey}`, `${post.repostOf}`);
+    pipeline.hincrby(`post:${post.repostOf}`, "reposts", -1);
+    pipeline.lrem(`timeline`, 0, `post:${postId}`);
+    pipeline.lrem(`timeline:${userKey}`, 0, `post:${postId}`);
+
+    await pipeline.exec();
+
     return {};
   }
 
