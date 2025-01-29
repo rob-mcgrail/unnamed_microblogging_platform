@@ -68,8 +68,6 @@ export async function loader({ request }: { request: Request }) {
   }
 }
 
-
-
 export function Layout() {
   const { data: { user, textHandlers } } = useLoaderData<typeof loader>() as { data: { user: User | null, textHandlers: TextHandler[] } };
   if (!user) {

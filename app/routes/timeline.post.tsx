@@ -48,10 +48,10 @@ export const action = async ({
 
   const pipeline = redis.pipeline();
 
-  pipeline.hset(`post:${userKey}:${postId}`, post);
+  pipeline.hset(`post:${postId}`, post);
   
-  pipeline.lpush(`timeline`, `post:${userKey}:${postId}`);
-  pipeline.lpush(`timeline:${userKey}`, `post:${userKey}:${postId}`);
+  pipeline.lpush(`timeline`, `post:${postId}`);
+  pipeline.lpush(`timeline:${userKey}`, `post:${postId}`);
   
   const updatedHandlers = output.textHandlers
     .map((handler) => {

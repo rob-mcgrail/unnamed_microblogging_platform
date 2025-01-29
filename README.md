@@ -7,7 +7,6 @@
 * Favs
 * Reposts
 * Replies
-* View own timeline
 * Store modal
 * Initial jokers for post length
 

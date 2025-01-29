@@ -9,15 +9,19 @@ import { Post } from "~/types";
 import Posts from "~/components/posts";
 import PostForm from "~/components/post-form";
 
+import { redis } from "~/redis.server";
 import fetchPostsForKey from "~/data/fetch-posts-for-key.server";
+import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 
 export async function loader({ request }: { request: Request }) {
   const posts = await fetchPostsForKey(request, 'timeline');
-  return json({ posts: posts });
+  const userKey = await fetchUserKeyFromRequest(request);
+  const favs = await redis.smembers(`favs:${userKey}`);
+  return json({ posts: posts, favs: favs });
 }
 
 export function Timeline() {
-  const { posts } = useLoaderData<typeof loader>() as { posts: Post[] };
+  const { posts, favs } = useLoaderData<typeof loader>() as { posts: Post[], favs: string[] };
   const revalidator = useRevalidator();
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export function Timeline() {
   return (
     <div className="flex-1 bg-gray-900 p-4 flex flex-col">
       <PostForm limit={100} />
-      <Posts posts={posts} />
+      <Posts favs={favs} posts={posts} />
     </div>
   );
 }

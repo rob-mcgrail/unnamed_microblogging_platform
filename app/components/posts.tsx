@@ -4,17 +4,18 @@ import { Post as PostType } from "~/types";
 
 interface PostsProps {
   posts: PostType[];
-  children?: React.ReactNode; // Allow children to be passed
+  favs: string[];
+  children?: React.ReactNode;
 }
 
-const Posts: React.FC<PostsProps> = ({ posts, children }) => {
+const Posts: React.FC<PostsProps> = ({ posts, favs, children }) => {
   return (
     <div className="flex-1 overflow-y-auto bg-gray-800 rounded-lg p-4">
-      {children && <div className="mb-4">{children}</div>} {/* Render children if provided */}
+      {children && <div className="mb-4">{children}</div>}
 
       <ul className="space-y-4">
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} post={post} favorite={favs.includes(post.id)} />
         ))}
       </ul>
     </div>

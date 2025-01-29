@@ -20,6 +20,7 @@ export type User = {
   posts: number;
   id: string;
   country: string | null;
+  money: number;
 }
 
 export type Post = {

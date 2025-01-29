@@ -14,7 +14,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
       <div className="flex-1 p-4">
         <UserInfo user={user} />
         <div className="py-4">
-          <p className="text-2xl text-yellow-500 font-bold mb-4">$1</p>
+          <p className="text-2xl text-yellow-500 font-bold mb-4">💵 ${user.money}</p>
         </div>  
       </div>
       
