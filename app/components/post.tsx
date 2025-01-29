@@ -36,7 +36,7 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   let optReposts = Number(post.reposts);
   
   if (fetcher.formAction === `/post/repost/${post.id}` && fetcher.state) {
-    optReposts += optReposted ? -1 : 1;
+    optReposts += optReposted ? -1 : 0;
     optReposted = !optReposted;
   }
 
