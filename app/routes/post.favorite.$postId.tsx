@@ -21,9 +21,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   pipeline.sadd(`favs:${userKey}`, postId);
 
   const [[, [subject, name]], [, added]] = await pipeline.exec();
-  await dispatchEvent("fav", userKey, user.name, subject, name);
 
   if (added > 0) {
+    await dispatchEvent("fav", userKey, user.name, subject, name);
     await redis.hincrby(`post:${postId}`, "favs", 1);
   } else {
     const pipeline = redis.pipeline();

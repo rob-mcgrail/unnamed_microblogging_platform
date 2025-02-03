@@ -47,8 +47,6 @@ export const action = async ({
     repost: null,
   }
 
-  await dispatchEvent("post", userKey, name);
-
   const pipeline = redis.pipeline();
 
   pipeline.hset(`post:${postId}`, post);
@@ -69,6 +67,7 @@ export const action = async ({
   pipeline.hincrby(`user:${userKey}`, "posts", 1);
   
   await pipeline.exec();
+  await dispatchEvent("post", userKey, name);
 
   return { };
 };
