@@ -6,10 +6,10 @@ interface MoneyCountProps {
 }
 
 const Posts: React.FC<MoneyCountProps> = ({ money, onComplete }) => {
-  const [displayedMoney, setDisplayedMoney] = useState(money);
+  const [displayedMoney, setDisplayedMoney] = useState(parseInt(money as unknown as string));
 
   useEffect(() => {
-    let start = displayedMoney;
+    let start = parseInt(displayedMoney as unknown as string);
     let end = money;
     let duration = 500; // 0.5 seconds
     let startTime: number | null = null;
