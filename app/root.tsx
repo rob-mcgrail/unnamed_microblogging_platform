@@ -25,6 +25,8 @@ import setupNewUser from "./data/setup-new-user.server";
 import fetchExistingUser from "./data/fetch-existing-user.server";
 import fetchUserKeyFromSession from "./data/fetch-user-key-from-session.server";
 
+import processEvents from "~/utils/process-events";
+
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -52,7 +54,18 @@ export async function loader({ request }: { request: Request }) {
     const userKey = await fetchUserKeyFromSession(sessionId);
     const data = await fetchExistingUser(userKey, country);
 
-    return json({ found: true, created: false, data });
+    const events = await redis.lrange(`events:${userKey}`, 0, -1);
+    await redis.del(`events:${userKey}`);
+
+    if (events.length > 0) {
+      const money = processEvents(data.user as User, events as string[], []);
+      if (data.user) {
+        data.user.money = money;
+      }
+      await redis.hset(`user:${userKey}`, { money });
+    }
+
+    return json({ found: true, created: false, data, events });
   }
   else {
     // Create a new user
@@ -64,13 +77,13 @@ export async function loader({ request }: { request: Request }) {
 
     const headers = new Headers();
     headers.append("Set-Cookie", await sessionCookie.serialize(newSessionId));
-    return json({ found: false, created: true, data }, { headers });
+    return json({ found: false, created: true, data, events: [] }, { headers });
   }
 }
 
 export function Layout() {
-  const { data: { user, textHandlers, events } } = useLoaderData<typeof loader>() as { 
-    data: { user: User | null, textHandlers: TextHandler[], events: string[] } 
+  const { data: { user, textHandlers }, events } = useLoaderData<typeof loader>() as { 
+    data: { user: User | null, textHandlers: TextHandler[] }, events: string[] 
   };
 
   if (!user) {

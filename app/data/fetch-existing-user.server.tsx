@@ -9,7 +9,6 @@ const fetchExistingUser = async (
   textHandlers: TextHandler[];
   favs: string[];
   reposts: string[];
-  events: string[];
 }> => {
   const userKeyRedis = `user:${userKey}`;
 
@@ -19,7 +18,6 @@ const fetchExistingUser = async (
   pipeline.get(`${userKeyRedis}:textHandlers`);
   pipeline.smembers(`favs:${userKey}`);
   pipeline.smembers(`reposts:${userKey}`);
-  pipeline.lrange(`events:${userKey}`, 0, 100);
 
   const [userData, jsonString, favs, reposts, events] = await pipeline.exec();
 
@@ -30,10 +28,10 @@ const fetchExistingUser = async (
       user: null,
       textHandlers: [],
       favs: [],
-      reposts: [],
-      events: []
+      reposts: []
     };
   }
+
 
   // Update last seen time and country if provided
   const updateData: Record<string, string> = { lastSeen: new Date().toISOString() };
@@ -46,7 +44,6 @@ const fetchExistingUser = async (
     textHandlers: jsonString[1] ? (JSON.parse(jsonString[1]) as TextHandler[]) : [],
     favs: favs[1] || [],
     reposts: reposts[1] || [],
-    events: events[1] || []
   };
 };
 

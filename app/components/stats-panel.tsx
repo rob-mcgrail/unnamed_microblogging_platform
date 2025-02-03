@@ -1,5 +1,6 @@
 import TextCounters from '~/components/text-counters';
 import UserInfo from '~/components/user-info';
+import MoneyCount from '~/components/money-count';
 
 import { User } from '~/types';
 
@@ -14,9 +15,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user, events }) => {
     <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
       <div className="flex-1 p-4">
         <UserInfo user={user} />
-        <div className="py-4">
-          <p className="text-2xl text-yellow-500 font-bold mb-4">💵 ${user.money}</p>
-        </div>
+        <MoneyCount money={user.money} />
       </div>
       
       <div className="flex-1 p-4">
