@@ -47,7 +47,7 @@ export const action = async ({
     repost: null,
   }
 
-  await dispatchEvent("post", userKey);
+  await dispatchEvent("post", userKey, name);
 
   const pipeline = redis.pipeline();
 

@@ -27,8 +27,6 @@ export const action = async ({
     return {};
   }
 
-  await dispatchEvent("repost", userKey, post.authorId);
-
   const added = await redis.sadd(`reposts:${userKey}`, `${postId}`);
 
   if (post.repostedBy == user.id) {
@@ -77,6 +75,8 @@ export const action = async ({
   pipeline.lpush(`timeline:${userKey}`, `post:${repostId}`);
   
   await pipeline.exec();
+
+  await dispatchEvent("repost", userKey, user.name, post.authorId, post.name);
 
   return { };
 };

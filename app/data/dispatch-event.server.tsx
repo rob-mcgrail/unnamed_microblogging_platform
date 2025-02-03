@@ -3,10 +3,12 @@ import { redis } from "~/redis.server";
 const dispatchEvent = async (
   event: 'fav' | 'reply' | 'repost' | 'post',
   actor: string,
-  subject?: string
+  actorName: string,
+  subject?: string,
+  subjectName?: string
 ) => {
   const eventString = JSON.stringify({ 
-    event, subject, actor, created: new Date().toISOString()
+    event, subject, subjectName, actor, actorName, created: new Date().toISOString()
   });
   const pipeline = redis.pipeline();
 
