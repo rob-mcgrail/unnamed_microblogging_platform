@@ -10,7 +10,7 @@ const process = (
   events.forEach((e) => {
     const event = JSON.parse(e);
     if (event.subject == user.id) {
-      console.log(event);
+
       modifiers.forEach((mod) => {
         // Something in here but for now...
       });
