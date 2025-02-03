@@ -1,38 +1,49 @@
 import { redis } from "~/redis.server";
 import { User, TextHandler } from "~/types";
 
-const fetchExistingUser = async (userKey: string, country?: string | null): 
-  Promise<{ user: User | null, textHandlers: TextHandler[], favs: string[], reposts: string[] }> => {
+const fetchExistingUser = async (
+  userKey: string,
+  country?: string | null
+): Promise<{
+  user: User | null;
+  textHandlers: TextHandler[];
+  favs: string[];
+  reposts: string[];
+}> => {
+  const userKeyRedis = `user:${userKey}`;
 
-  const user = await redis.hgetall(`user:${userKey}`) as User | null;
-  
+  // Using pipeline to batch Redis commands
+  const pipeline = redis.pipeline();
+  pipeline.hgetall(userKeyRedis);
+  pipeline.get(`${userKeyRedis}:textHandlers`);
+  pipeline.smembers(`favs:${userKey}`);
+  pipeline.smembers(`reposts:${userKey}`);
+
+  const [userData, jsonString, favs, reposts] = await pipeline.exec();
+
+  const user = (userData[1] as User) || null;
+
   if (!user) {
     return {
       user: null,
       textHandlers: [],
       favs: [],
-      reposts: []
+      reposts: [],
     };
   }
 
-  if (country) {
-    await redis.hset(`user:${userKey}`, { lastSeen: new Date().toISOString(), country });
-  }
-  else {
-    await redis.hset(`user:${userKey}`, { lastSeen: new Date().toISOString() });
-  }
+  // Update last seen time and country if provided
+  const updateData: Record<string, string> = { lastSeen: new Date().toISOString() };
+  if (country) updateData.country = country;
 
-  const jsonString = await redis.get(`user:${userKey}:textHandlers`);
-  const favs = await redis.smembers(`favs:${userKey}`);
-  const reposts = await redis.smembers(`reposts:${userKey}`);
+  await redis.hset(userKeyRedis, updateData);
 
-  const textHandlers = JSON.parse(jsonString) as TextHandler[];
   return {
     user,
-    textHandlers,
-    favs,
-    reposts
+    textHandlers: jsonString[1] ? (JSON.parse(jsonString[1]) as TextHandler[]) : [],
+    favs: favs[1] || [],
+    reposts: reposts[1] || [],
   };
-}
+};
 
 export default fetchExistingUser;

@@ -28,8 +28,10 @@ export const action = async ({
   if (added > 0) {
     await redis.hincrby(`post:${postId}`, "favs", 1);
   } else {
-    redis.srem(`favs:${userKey}`, `${postId}`);
-    await redis.hincrby(`post:${postId}`, "favs", -1);
+    const pipeline = redis.pipeline();
+    pipeline.srem(`favs:${userKey}`, `${postId}`);
+    pipeline.hincrby(`post:${postId}`, "favs", -1);
+    pipeline.exec();
   }
   return { };
 };
