@@ -5,6 +5,7 @@ import type {
 import { redis } from "~/redis.server";
 import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 import fetchExistingUser from "~/data/fetch-existing-user.server";
+import dispatchEvent from "~/data/dispatch-event.server";
 
 export const action = async ({
   request,
@@ -18,6 +19,9 @@ export const action = async ({
   }
 
   const postId = params.postId as string;
+
+  const subject = await redis.hget(`post:${postId}`, "authorId");
+  await dispatchEvent("fav", userKey, subject);
 
   const added = await redis.sadd(`favs:${userKey}`, `${postId}`);
 

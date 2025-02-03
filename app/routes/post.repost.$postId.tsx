@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { redis } from "~/redis.server";
 import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 import fetchExistingUser from "~/data/fetch-existing-user.server";
+import dispatchEvent from "~/data/dispatch-event.server";
 
 export const action = async ({
   request,
@@ -25,6 +26,8 @@ export const action = async ({
   if (post.authorId == user.id) {
     return {};
   }
+
+  await dispatchEvent("repost", userKey, post.authorId);
 
   const added = await redis.sadd(`reposts:${userKey}`, `${postId}`);
 

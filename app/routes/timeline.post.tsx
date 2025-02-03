@@ -8,6 +8,7 @@ import { TextHandler } from "~/types";
 import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 import fetchExistingUser from "~/data/fetch-existing-user.server";
 import { processContent } from "~/utils/process-content";
+import dispatchEvent from "~/data/dispatch-event.server";
 
 export const action = async ({
   request,
@@ -45,6 +46,8 @@ export const action = async ({
     repostOf: '',
     repost: null,
   }
+
+  await dispatchEvent("post", userKey);
 
   const pipeline = redis.pipeline();
 
