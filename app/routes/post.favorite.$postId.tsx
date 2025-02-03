@@ -1,37 +1,36 @@
-import type {
-  ActionFunctionArgs,
-} from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 
 import { redis } from "~/redis.server";
 import fetchUserKeyFromRequest from "~/data/fetch-user-key-from-request.server";
 import fetchExistingUser from "~/data/fetch-existing-user.server";
 import dispatchEvent from "~/data/dispatch-event.server";
 
-export const action = async ({
-  request,
-  params
-}: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userKey = await fetchUserKeyFromRequest(request);
   const { user } = await fetchExistingUser(userKey);
 
   if (!user) {
-    return { };
+    return {};
   }
 
   const postId = params.postId as string;
 
-  const subject = await redis.hget(`post:${postId}`, "authorId");
-  await dispatchEvent("fav", userKey, subject);
+  // Using pipeline to batch Redis commands
+  const pipeline = redis.pipeline();
+  pipeline.hget(`post:${postId}`, "authorId");
+  pipeline.sadd(`favs:${userKey}`, postId);
 
-  const added = await redis.sadd(`favs:${userKey}`, `${postId}`);
+  const [[, subject], [, added]] = await pipeline.exec();
+  await dispatchEvent("fav", userKey, subject);
 
   if (added > 0) {
     await redis.hincrby(`post:${postId}`, "favs", 1);
   } else {
     const pipeline = redis.pipeline();
-    pipeline.srem(`favs:${userKey}`, `${postId}`);
+    pipeline.srem(`favs:${userKey}`, postId);
     pipeline.hincrby(`post:${postId}`, "favs", -1);
-    pipeline.exec();
+    await pipeline.exec();
   }
-  return { };
+
+  return {};
 };
