@@ -9,6 +9,7 @@ const fetchExistingUser = async (
   textHandlers: TextHandler[];
   favs: string[];
   reposts: string[];
+  events: string[];
 }> => {
   const userKeyRedis = `user:${userKey}`;
 
@@ -18,8 +19,9 @@ const fetchExistingUser = async (
   pipeline.get(`${userKeyRedis}:textHandlers`);
   pipeline.smembers(`favs:${userKey}`);
   pipeline.smembers(`reposts:${userKey}`);
+  pipeline.lrange(`events:${userKey}`, 0, 100);
 
-  const [userData, jsonString, favs, reposts] = await pipeline.exec();
+  const [userData, jsonString, favs, reposts, events] = await pipeline.exec();
 
   const user = (userData[1] as User) || null;
 
@@ -29,6 +31,7 @@ const fetchExistingUser = async (
       textHandlers: [],
       favs: [],
       reposts: [],
+      events: []
     };
   }
 
@@ -43,6 +46,7 @@ const fetchExistingUser = async (
     textHandlers: jsonString[1] ? (JSON.parse(jsonString[1]) as TextHandler[]) : [],
     favs: favs[1] || [],
     reposts: reposts[1] || [],
+    events: events[1] || []
   };
 };
 

@@ -69,7 +69,10 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export function Layout() {
-  const { data: { user, textHandlers } } = useLoaderData<typeof loader>() as { data: { user: User | null, textHandlers: TextHandler[] } };
+  const { data: { user, textHandlers, events } } = useLoaderData<typeof loader>() as { 
+    data: { user: User | null, textHandlers: TextHandler[], events: string[] } 
+  };
+
   if (!user) {
     return <h1>USER ISSUE</h1>;
   }
@@ -85,7 +88,7 @@ export function Layout() {
       <body>
         <RichTextProvider storedTextHandlers={textHandlers}>
           <div className="flex h-screen">
-            <StatsPanel user={user} />
+            <StatsPanel user={user} events={events} />
             <Outlet />
           </div>
           <ScrollRestoration />

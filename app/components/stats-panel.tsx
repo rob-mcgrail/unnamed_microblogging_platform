@@ -5,9 +5,10 @@ import { User } from '~/types';
 
 export interface StatsPanelProps {
   user: User;
+  events: string[];
 }
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
+const StatsPanel: React.FC<StatsPanelProps> = ({ user, events }) => {
 
   return (
     <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
@@ -15,7 +16,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
         <UserInfo user={user} />
         <div className="py-4">
           <p className="text-2xl text-yellow-500 font-bold mb-4">💵 ${user.money}</p>
-        </div>  
+        </div>
       </div>
       
       <div className="flex-1 p-4">
