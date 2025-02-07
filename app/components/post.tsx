@@ -25,7 +25,8 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   }, [favorite, post.favs]);
 
   const handleFavoriteClick = () => {
-    if (fetcher.state !== "idle" || favoriteLockRef.current) return;
+    if (fetcher.state !== "idle") return;
+    favoriteLockRef.current = false;
 
     setOptFavorite((prev) => !prev);
     setOptFavs((prev) => (optFavorite ? prev - 1 : prev + 1));
@@ -34,7 +35,7 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
     
     setTimeout(() => {
       favoriteLockRef.current = false;
-    }, 10000); // Lock for 10 seconds
+    }, 3000); // Lock for 10 seconds
   };
 
   const favorites = (
@@ -64,7 +65,8 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   }, [reposted, post.reposts]);
 
   const handleRepostClick = () => {
-    if (fetcher.state !== "idle" || repostLockRef.current) return;
+    if (fetcher.state !== "idle") return;
+    repostLockRef.current = false;
 
     setOptReposted((prev) => !prev);
     setOptReposts((prev) => (optReposted ? prev - 1 : prev + 1));
@@ -73,7 +75,7 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
 
     setTimeout(() => {
       repostLockRef.current = false;
-    }, 10000); // Lock for 10 seconds
+    }, 3000); // Lock for 10 seconds
   };
 
   const reposts = (
