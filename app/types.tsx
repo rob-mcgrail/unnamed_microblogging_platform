@@ -39,3 +39,12 @@ export type Post = {
   repostedByName: string | null;
   repost: boolean;
 }
+
+export type Event = {
+  subject: string;
+  subjectName: string;
+  action: string;
+  actor?: string;
+  actorName?: string;
+  money?: number;
+}

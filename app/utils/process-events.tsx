@@ -1,26 +1,28 @@
-import { User } from "../types";
+import { User, Event } from "../types";
 
 const process = (
   startMoney: number,
   userKey: string,
-  events: string[],
+  events: Event[],
   modifiers: any[]
-): number => {
+): { money: number, events: Event[] } => {
   let money = parseInt(startMoney as unknown as string);
+  let processedEvents: Event[] = [];
 
   events.forEach((e) => {
-    const event = JSON.parse(e);
-    if (event.subject == userKey) {
+    if (e.subject == userKey) {
 
       modifiers.forEach((mod) => {
         // Something in here but for now...
       });
-  
+
+      e.money = 1;
+      processedEvents.push(e);
       money +=1;
     }
   });
 
-  return money;
+  return { events: processedEvents, money };
 };
 
 export default process;

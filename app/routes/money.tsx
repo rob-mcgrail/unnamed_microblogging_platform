@@ -9,14 +9,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookieHeader = request.headers.get("Cookie");
   const sessionId = await sessionCookie.parse(cookieHeader);
   const userKey = await fetchUserKeyFromSession(sessionId);
-  const events = await redis.lrange(`events:${userKey}`, 0, -1);
+  let events = await redis.lrange(`events:${userKey}`, 0, -1);
   await redis.del(`events:${userKey}`);
-  let money = await redis.hget(`user:${userKey}`, 'money');
+  let initialMoney = await redis.hget(`user:${userKey}`, 'money');
+  let money = parseInt(initialMoney as string);
 
   if (events.length > 0) {
-    money = processEvents(money, userKey, events as string[], []);
+    const parsedEvents = events.map((e: string) => JSON.parse(e))
+    const result = processEvents(initialMoney, userKey, parsedEvents, []);
+    events = result.events;
+    money = result.money;
     await redis.hset(`user:${userKey}`, { money });
   }
 
-  return json({ money });
+  return json({ money, events });
 };

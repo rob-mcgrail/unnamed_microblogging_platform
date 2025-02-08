@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { Event } from "~/types";
 
 interface MoneyCountProps {
   money: number;
+  events: Event[];
   onComplete?: () => void; // Optional callback when animation finishes
 }
 
-const Posts: React.FC<MoneyCountProps> = ({ money, onComplete }) => {
+const Posts: React.FC<MoneyCountProps> = ({ money, events, onComplete }) => {
   const [displayedMoney, setDisplayedMoney] = useState(parseInt(money as unknown as string));
 
   useEffect(() => {

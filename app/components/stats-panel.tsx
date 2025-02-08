@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import TextCounters from "~/components/text-counters";
 import UserInfo from "~/components/user-info";
 import MoneyCount from "~/components/money-count";
-import { User } from "~/types";
+import { User, Event } from "~/types";
+import { data } from "@remix-run/node";
 
 export interface StatsPanelProps {
   user: User;
@@ -10,6 +11,7 @@ export interface StatsPanelProps {
 
 const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
   const [money, setMoney] = useState(user.money);
+  const [events, setEvents] = useState([] as Event[]);
 
   useEffect(() => {
     const fetchMoney = async () => {
@@ -18,6 +20,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
         if (!response.ok) throw new Error("Failed to fetch money");
         const data = await response.json();
         setMoney(data.money);
+        setEvents(data.events);
       } catch (error) {
         console.error("Error fetching money:", error);
       }
@@ -33,7 +36,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
     <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
       <div className="flex-1 p-4">
         <UserInfo user={user} />
-        <MoneyCount money={money} />
+        <MoneyCount money={money} events={events} />
       </div>
 
       <div className="flex-1 p-4">
