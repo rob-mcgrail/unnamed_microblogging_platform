@@ -26,7 +26,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
     };
 
     // Polling every 10 seconds
-    const intervalId = setInterval(fetchMoney, 3000);
+    const intervalId = setInterval(fetchMoney, 1600);
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);

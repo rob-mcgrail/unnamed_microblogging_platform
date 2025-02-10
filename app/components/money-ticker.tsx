@@ -29,7 +29,7 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
 
     let start = displayedMoney;
     let end = displayedMoney + event.money;
-    let duration = 100; // 0.5 seconds per event
+    let duration = 100;
     let startTime: number | null = null;
 
     const step = (timestamp: number) => {
