@@ -43,7 +43,7 @@ export type Post = {
 export type Event = {
   subject: string;
   subjectName: string;
-  action: string;
+  event: 'post' | 'repost' | 'reply' | 'fav';
   actor?: string;
   actorName?: string;
   money?: number;

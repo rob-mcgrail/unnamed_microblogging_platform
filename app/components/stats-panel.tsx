@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import TextCounters from "~/components/text-counters";
 import UserInfo from "~/components/user-info";
-import MoneyCount from "~/components/money-count";
+import MoneyTicker from "~/components/money-ticker";
 import { User, Event } from "~/types";
-import { data } from "@remix-run/node";
 
 export interface StatsPanelProps {
   user: User;
@@ -27,7 +26,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
     };
 
     // Polling every 10 seconds
-    const intervalId = setInterval(fetchMoney, 1000);
+    const intervalId = setInterval(fetchMoney, 3000);
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
@@ -36,7 +35,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
     <div className="flex flex-col w-2/5 h-full bg-gray-800 text-white">
       <div className="flex-1 p-4">
         <UserInfo user={user} />
-        <MoneyCount money={money} events={events} />
+        <MoneyTicker initialMoney={money} events={events} />
       </div>
 
       <div className="flex-1 p-4">
