@@ -49,10 +49,12 @@ export const action = async ({
 
   const pipeline = redis.pipeline();
 
-  pipeline.hset(`post:${postId}`, post);
+  const postKey = `post:${postId}`;
+
+  pipeline.hset(postKey, post);
   
-  pipeline.lpush(`timeline`, `post:${postId}`);
-  pipeline.lpush(`timeline:${userKey}`, `post:${postId}`);
+  pipeline.lpush(`timeline`, postKey);
+  pipeline.lpush(`timeline:${userKey}`, postKey);
   
   const updatedHandlers = output.textHandlers
     .map((handler) => {
@@ -67,7 +69,10 @@ export const action = async ({
   pipeline.hincrby(`user:${userKey}`, "posts", 1);
   
   await pipeline.exec();
-  await dispatchEvent("post", userKey, name);
+
+  await dispatchEvent(
+    { event: "post", actor: userKey, actorName: name, object: postKey, subject: post.authorId, subjectName: post.name }
+  );
 
   return { };
 };

@@ -14,21 +14,24 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   const postId = params.postId as string;
+  const postKey = `post:${postId}`;
 
   // Using pipeline to batch Redis commands
   const pipeline = redis.pipeline();
-  pipeline.hmget(`post:${postId}`, "authorId", "name");
+  pipeline.hmget(postKey, "authorId", "name");
   pipeline.sadd(`favs:${userKey}`, postId);
 
   const [[, [subject, name]], [, added]] = await pipeline.exec();
 
   if (added > 0) {
-    await dispatchEvent("fav", userKey, user.name, subject, name);
-    await redis.hincrby(`post:${postId}`, "favs", 1);
+    await dispatchEvent(
+      { event: "fav", actor: userKey, actorName: user.name, object: postKey, subject: subject, subjectName: name }
+    );
+    await redis.hincrby(postKey, "favs", 1);
   } else {
     const pipeline = redis.pipeline();
     pipeline.srem(`favs:${userKey}`, postId);
-    pipeline.hincrby(`post:${postId}`, "favs", -1);
+    pipeline.hincrby(postKey, "favs", -1);
     await pipeline.exec();
   }
 

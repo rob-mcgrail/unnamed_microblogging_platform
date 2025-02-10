@@ -45,6 +45,7 @@ export type Event = {
   subjectName: string;
   event: 'post' | 'repost' | 'reply' | 'fav';
   actor?: string;
+  object?: string;
   actorName?: string;
   money?: number;
 }

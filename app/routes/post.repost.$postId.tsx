@@ -68,15 +68,17 @@ export const action = async ({
   }
 
   const pipeline = redis.pipeline();
-
-  pipeline.hset(`post:${repostId}`, repost);
+  const postKey = `post:${repostId}`;
+  pipeline.hset(postKey, repost);
   
-  pipeline.lpush(`timeline`, `post:${repostId}`);
-  pipeline.lpush(`timeline:${userKey}`, `post:${repostId}`);
+  pipeline.lpush(`timeline`, postKey);
+  pipeline.lpush(`timeline:${userKey}`, postKey);
   
   await pipeline.exec();
 
-  await dispatchEvent("repost", userKey, user.name, post.authorId, post.name);
+  await dispatchEvent(
+    { event: "repost", actor: userKey, actorName: user.name, object: postKey, subject: post.authorId, subjectName: post.name }
+  );
 
   return { };
 };

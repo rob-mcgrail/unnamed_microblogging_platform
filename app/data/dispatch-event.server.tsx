@@ -1,25 +1,27 @@
 import { redis } from "~/redis.server";
 
-const dispatchEvent = async (
-  event: 'fav' | 'reply' | 'repost' | 'post',
-  actor: string,
-  actorName: string,
-  subject?: string,
-  subjectName?: string
-) => {
-  const eventString = JSON.stringify({ 
-    event, subject, subjectName, actor, actorName, created: new Date().toISOString()
-  });
-  const pipeline = redis.pipeline();
+import { Event } from "~/types";
 
-  pipeline.lpush(`events`, eventString);
-  pipeline.lpush(`events:${actor}`, eventString);
-  pipeline.lpush(`events:${subject}`, eventString);
+const dispatchEvent = async (eventData: Event) => {
+  const eventString = JSON.stringify({
+    ...eventData,
+    created: new Date().toISOString(),
+  });
+  
+  const pipeline = redis.pipeline();
+  
+  pipeline.lpush("events", eventString);
+  
+  if (eventData.actor) {
+    pipeline.lpush(`events:${eventData.actor}`, eventString);
+  }
+  
+  if (eventData.actor && eventData.actor !== eventData.subject) {
+    pipeline.lpush(`events:${eventData.subject}`, eventString);
+  }
 
   await pipeline.exec();
-
   return true;
-}
-
+};
 
 export default dispatchEvent;

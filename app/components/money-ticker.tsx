@@ -52,14 +52,22 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
     requestAnimationFrame(step);
   }, [eventIndex, localEvents]); // Now listens to `localEvents` to detect changes
 
+  const formatEvent = (e: Event) => { 
+    let description = `${e.actorName} ${e.event}ed`;
+    if (e.money) {
+      description += ` ($${e.money})`;
+    }
+    return description;
+  }
+
   return (
     <div className="py-4">
       <p className="text-2xl text-yellow-500 font-bold mb-4">💵 ${displayedMoney}</p>
       <div className="overflow-hidden max-h-40">
         <ul className="space-y-1">
           {allEvents.slice(-5).reverse().map((e, idx) => ( // Only show last 5 events, most recent first
-            <li key={idx} className="text-sm text-gray-300">
-              {e.actorName ? `${e.actorName} ${e.event}` : e.subjectName} {e.money ? `(+${e.money})` : ""}
+            <li key={idx} className="text-sm text-yellow-600">
+              {formatEvent(e)}
             </li>
           ))}
         </ul>
