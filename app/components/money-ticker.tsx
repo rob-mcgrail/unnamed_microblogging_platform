@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Event } from "~/types";
+import { useUser } from "~/contexts/user-context";
 
 interface MoneyCountProps {
   initialMoney: number;
@@ -12,6 +13,7 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [eventIndex, setEventIndex] = useState(0);
   const [localEvents, setLocalEvents] = useState<Event[]>([]); // Store the incoming events locally
+  const { user } = useUser();
 
   // Reset when new events arrive
   useEffect(() => {
@@ -52,8 +54,15 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
     requestAnimationFrame(step);
   }, [eventIndex, localEvents]); // Now listens to `localEvents` to detect changes
 
-  const formatEvent = (e: Event) => { 
-    let description = `${e.actorName} ${e.event}ed`;
+  const formatEvent = (e: Event) => {
+    let actorName = (e.actor === user.id) ? 'You' : e.actorName;
+    let subjectName = (e.subject === user.id) ? 'you' : e.subjectName;
+    if (e.subject === e.actor) {
+      subjectName = 'yourself';
+    }
+    let action = `${e.event}ed`;
+    let description = `${actorName} ${action} ${subjectName}`;
+
     if (e.money) {
       description += ` ($${e.money})`;
     }

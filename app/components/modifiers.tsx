@@ -4,7 +4,7 @@ const Modifiers = () => {
   const { modifiers } = useUser();
 
   return (
-    <div className="flex flex-col gap-3 pl-6">
+    <div className="flex flex-col gap-3 pl-6 pr-6">
       {modifiers.map((modifier) => (
         <div 
           key={modifier.identifier} 
