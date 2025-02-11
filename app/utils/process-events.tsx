@@ -24,11 +24,21 @@ const process = (
         money += 5;
       }
 
-      if (e.event == 'fav') {
-        e.money = 2;
-        processedEvents.push(e);
-        money += 2;
+      if (e.actor == userKey){
+        if (e.event == 'fav') {
+          e.money = 3;
+          processedEvents.push(e);
+          money += 3;
+        }
       }
+      else {
+        if (e.event == 'fav') {
+          e.money = 2;
+          processedEvents.push(e);
+          money += 2;
+        }
+      }
+
     }
     else {
       if (['fav', 'repost'].includes(e.event)) {

@@ -60,6 +60,9 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
     if (e.subject === e.actor) {
       subjectName = 'yourself';
     }
+    if (e.event == 'post') {
+      subjectName = '';
+    }
     let action = `${e.event}ed`;
     let description = `${actorName} ${action} ${subjectName}`;
 
