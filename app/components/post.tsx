@@ -1,6 +1,7 @@
 import { useFetcher, Link } from "@remix-run/react";
 import { useState, useEffect, useRef } from "react";
 import { Post as PostType } from "~/types";
+import { useUser } from "~/contexts/user-context";
 
 export interface PostProps {
   post: PostType;
@@ -10,6 +11,8 @@ export interface PostProps {
 
 const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   const { name, authorId, content, repost, repostedByName } = post;
+  const { user } = useUser();
+  
   const fetcher = useFetcher();
 
   // Optimistic favorite state
@@ -65,6 +68,7 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
   }, [reposted, post.reposts]);
 
   const handleRepostClick = () => {
+    if (user.id === authorId) return;
     if (fetcher.state !== "idle") return;
     repostLockRef.current = false;
 
@@ -84,6 +88,8 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
         type="submit"
         className={`text-green-500 px-2 ${
           (optReposted || repost) ? "saturate-100" : "saturate-0"
+        } ${
+          (user.id == authorId) ? "cursor-default" : "cursor-pointer"
         }`}
         onClick={handleRepostClick}
       >

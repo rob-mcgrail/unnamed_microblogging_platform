@@ -20,6 +20,8 @@ import { sessionCookie } from "~/cookies";
 import { redis } from "~/redis.server";
 
 import { RichTextProvider } from '~/contexts/rich-text-context';
+import { UserProvider } from "~/contexts/user-context";
+
 import StatsPanel from '~/components/stats-panel';
 import setupNewUser from "./data/setup-new-user.server";
 import fetchExistingUser from "./data/fetch-existing-user.server";
@@ -86,14 +88,16 @@ export function Layout() {
         <Links />
       </head>
       <body>
-        <RichTextProvider storedTextHandlers={textHandlers}>
-          <div className="flex h-screen">
-            <StatsPanel user={user} />
-            <Outlet />
-          </div>
-          <ScrollRestoration />
-          <Scripts />
-        </RichTextProvider>
+        <UserProvider currentUser={user}>
+          <RichTextProvider storedTextHandlers={textHandlers}>
+            <div className="flex h-screen">
+              <StatsPanel />
+              <Outlet />
+            </div>
+            <ScrollRestoration />
+            <Scripts />
+          </RichTextProvider>
+        </UserProvider>
       </body>
     </html>
   );

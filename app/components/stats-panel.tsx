@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import TextCounters from "~/components/text-counters";
 import UserInfo from "~/components/user-info";
 import MoneyTicker from "~/components/money-ticker";
-import { User, Event } from "~/types";
+import { useUser } from "~/contexts/user-context";
 
-export interface StatsPanelProps {
-  user: User;
-}
+import { Event } from "~/types";
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ user }) => {
+
+
+const StatsPanel = () => {
+  const { user } = useUser();
   const [money, setMoney] = useState(user.money);
   const [events, setEvents] = useState([] as Event[]);
 
