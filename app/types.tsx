@@ -49,3 +49,13 @@ export type Event = {
   actorName?: string;
   money?: number;
 }
+
+export type Modifier = {
+  name: string;
+  emoji: string;
+  description: string;
+  identifier: string;
+  rarirty: number;
+  events: string[];
+  actions: string[];
+}

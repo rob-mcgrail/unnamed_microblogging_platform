@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import TextCounters from "~/components/text-counters";
 import UserInfo from "~/components/user-info";
 import MoneyTicker from "~/components/money-ticker";
+import Modifiers from "~/components/modifiers";
+
 import { useUser } from "~/contexts/user-context";
 
 import { Event } from "~/types";
-
-
 
 const StatsPanel = () => {
   const { user } = useUser();
@@ -40,7 +40,7 @@ const StatsPanel = () => {
       </div>
 
       <div className="flex-1 p-4">
-        <h1 className="text-xl">0/5</h1>
+        <Modifiers />
       </div>
 
       <div className="flex-1 p-4">

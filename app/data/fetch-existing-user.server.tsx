@@ -1,5 +1,6 @@
 import { redis } from "~/redis.server";
-import { User, TextHandler } from "~/types";
+import { User, TextHandler, Modifier } from "~/types";
+import { modifiers } from '~/data/modifiers.server';
 
 const fetchExistingUser = async (
   userKey: string,
@@ -9,6 +10,7 @@ const fetchExistingUser = async (
   textHandlers: TextHandler[];
   favs: string[];
   reposts: string[];
+  modifiers: Modifier[];
 }> => {
   const userKeyRedis = `user:${userKey}`;
 
@@ -27,6 +29,7 @@ const fetchExistingUser = async (
     return {
       user: null,
       textHandlers: [],
+      modifiers: modifiers as Modifier[],
       favs: [],
       reposts: []
     };
@@ -42,6 +45,7 @@ const fetchExistingUser = async (
   return {
     user,
     textHandlers: jsonString[1] ? (JSON.parse(jsonString[1]) as TextHandler[]) : [],
+    modifiers: modifiers as Modifier[],
     favs: favs[1] || [],
     reposts: reposts[1] || [],
   };

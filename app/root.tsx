@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import "./tailwind.css";
 
-import { TextHandler, User } from "~/types";
+import { TextHandler, User, Modifier } from "~/types";
 
 import { sessionCookie } from "~/cookies";
 import { redis } from "~/redis.server";
@@ -71,8 +71,8 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export function Layout() {
-  const { data: { user, textHandlers } } = useLoaderData<typeof loader>() as { 
-    data: { user: User | null, textHandlers: TextHandler[] }
+  const { data: { user, textHandlers, modifiers } } = useLoaderData<typeof loader>() as { 
+    data: { user: User | null, textHandlers: TextHandler[], modifiers: Modifier[] }
   };
 
   if (!user) {
@@ -88,7 +88,7 @@ export function Layout() {
         <Links />
       </head>
       <body>
-        <UserProvider currentUser={user}>
+        <UserProvider currentUser={user} currentModifiers={modifiers} >
           <RichTextProvider storedTextHandlers={textHandlers}>
             <div className="flex h-screen">
               <StatsPanel />
