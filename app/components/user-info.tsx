@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+
 import { User } from '~/types';
 
 export interface UserInfoProps {
@@ -10,9 +12,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
   return (
     <>
-      <a href={`/timeline/${user.id}`}>
+      <Link to={`/timeline/${user.id}`}>
         <h1 className="text-xl">{user.name}</h1>
-      </a>
+      </Link>
       <p>{user.bio}</p>
       { user.country && (
         <img

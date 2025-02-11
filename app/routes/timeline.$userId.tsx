@@ -1,6 +1,7 @@
 import {
   useLoaderData,
   useRevalidator,
+  Link
 } from "@remix-run/react";
 import { useEffect } from "react";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
@@ -46,12 +47,12 @@ export function Timeline() {
           </div>
         )}
 
-        <a
-          href="/timeline/global"
+        <Link
+          to="/timeline/global"
           className="w-auto flex items-center justify-center gap-2 px-4 py-3 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded-lg font-medium transition-all"
         >
           <span>🔙 Go Back</span>
-        </a>
+        </Link>
       </Posts>
     </div>
   );

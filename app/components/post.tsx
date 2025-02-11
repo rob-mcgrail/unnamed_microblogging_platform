@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, Link } from "@remix-run/react";
 import { useState, useEffect, useRef } from "react";
 import { Post as PostType } from "~/types";
 
@@ -94,12 +94,12 @@ const Post: React.FC<PostProps> = ({ post, favorite, reposted }) => {
 
   return (
     <li className="bg-gray-700 p-4 rounded-lg text-white">
-      <a href={`/timeline/${authorId}`}>
+      <Link to={`/timeline/${authorId}`}>
         <h2 className="text-xl">
           {name}
           {repost && repostedByName && ` ♻️ by ${repostedByName}`}
         </h2>
-      </a>
+      </Link>
       <p className="whitespace-pre">{content}</p>
 
       <div className="flex justify-around p-2">
