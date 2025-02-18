@@ -12,7 +12,7 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events }) => {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [eventIndex, setEventIndex] = useState(0);
   const [localEvents, setLocalEvents] = useState<Event[]>([]); // Store the incoming events locally
-  const { user } = useUser();
+  const { user, setActiveModifiers } = useUser();
 
   // Reset when new events arrive
   useEffect(() => {
@@ -44,6 +44,7 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events }) => {
         setDisplayedMoney(end);
         setAllEvents((prev) => [...prev, event]); // Store all events (none are lost)
         setEventIndex((prev) => prev + 1); // Move to next event
+        setActiveModifiers(event.modifiers || []); // Set active
       }
     };
 

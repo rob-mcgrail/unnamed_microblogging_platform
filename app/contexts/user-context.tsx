@@ -7,16 +7,23 @@ interface UserContextType {
   setUser: (user: User) => void;
   modifiers: Modifier[];
   setModifiers: (modifier: Modifier[]) => void;
+  activeModifiers: string[];
+  setActiveModifiers: (activeModifiers: string[]) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider = ({ children, currentUser, currentModifiers }: { children: ReactNode; currentUser: User, currentModifiers: Modifier[] }) => {
+export const UserProvider = ({ children, currentUser, currentModifiers }: { 
+  children: ReactNode; currentUser: User, currentModifiers: Modifier[] }
+) => {
   const [user, setUser] = useState<User>(currentUser);
   const [modifiers, setModifiers] = useState<Modifier[]>(currentModifiers);
+  const [activeModifiers, setActiveModifiers] = useState<string[]>([]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, modifiers, setModifiers }}>
+    <UserContext.Provider value={{ 
+      user, setUser, modifiers, setModifiers, activeModifiers, setActiveModifiers
+    }}>
       {children}
     </UserContext.Provider>
   );
