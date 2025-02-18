@@ -5,10 +5,9 @@ import { useUser } from "~/contexts/user-context";
 interface MoneyCountProps {
   initialMoney: number;
   events: Event[];
-  onComplete?: () => void; // Optional callback when animation finishes
 }
 
-const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComplete }) => {
+const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events }) => {
   const [displayedMoney, setDisplayedMoney] = useState(parseInt(initialMoney as unknown as string));
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [eventIndex, setEventIndex] = useState(0);
@@ -45,9 +44,6 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
         setDisplayedMoney(end);
         setAllEvents((prev) => [...prev, event]); // Store all events (none are lost)
         setEventIndex((prev) => prev + 1); // Move to next event
-        if (eventIndex + 1 >= localEvents.length && onComplete) {
-          onComplete();
-        }
       }
     };
 
@@ -67,7 +63,7 @@ const MoneyTicker: React.FC<MoneyCountProps> = ({ initialMoney, events, onComple
     let description = `${actorName} ${action} ${subjectName}`;
 
     if (e.money) {
-      description += ` ($${e.money})`;
+      description += ` ($${e.money}) ${e.emoji}`;
     }
     return description;
   }

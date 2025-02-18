@@ -14,12 +14,16 @@ const process = (
 
       if (e.event == 'post') {
         e.money = 1;
+        e.emoji = '💩';
+        e.modifiers = ['spambot'];
         processedEvents.push(e);
         money += 1;
       }
 
       if (e.event == 'repost') {
         e.money = 5;
+        e.emoji = '👩🏻‍💻';
+        e.modifiers = ['boosted-1'];
         processedEvents.push(e);
         money += 5;
       }
@@ -27,6 +31,8 @@ const process = (
       if (e.actor == userKey){
         if (e.event == 'fav') {
           e.money = 3;
+          e.emoji = '👯🐣';
+          e.modifiers = ['favorites-1', 'sociable-1'];
           processedEvents.push(e);
           money += 3;
         }
@@ -34,6 +40,8 @@ const process = (
       else {
         if (e.event == 'fav') {
           e.money = 2;
+          e.emoji = '🐣';
+          e.modifiers = ['favorites-1'];
           processedEvents.push(e);
           money += 2;
         }
@@ -43,6 +51,8 @@ const process = (
     else {
       if (['fav', 'repost'].includes(e.event)) {
         e.money = 1;
+        e.emoji = '👯';
+        e.modifiers = ['sociable-1'];
         processedEvents.push(e);
         money += 1;
       }

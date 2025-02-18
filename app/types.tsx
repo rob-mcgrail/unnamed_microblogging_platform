@@ -48,6 +48,8 @@ export type Event = {
   object?: string;
   actorName?: string;
   money?: number;
+  emoji?: string;
+  modifiers?: string[];
 }
 
 export type Modifier = {
